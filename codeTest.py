@@ -1,13 +1,18 @@
-a, b, v = map(int, input().split())
+n = int(input())
+data = list(map(int, input().split()))
+count = 0
 
-one_day = a - b
-v -= a
-count = 1
+for num in data :
+    bug = False
+    if num > 1 :
+        for i in range(2, num - 1) :
+            if num % i == 0 :
+                bug = True
+    else :
+        bug = True
 
-count += v // one_day
+    if not bug :
+        count += 1
 
-if v % one_day > 0 :
-    count += 1
 
 print(count)
-
