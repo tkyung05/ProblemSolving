@@ -1,18 +1,48 @@
+m = int(input())
 n = int(input())
-data = list(map(int, input().split()))
-count = 0
 
-for num in data :
-    bug = False
-    if num > 1 :
-        for i in range(2, num - 1) :
-            if num % i == 0 :
-                bug = True
-    else :
-        bug = True
+data = []
+primeCh = True
+sum = 0
+min = 0
 
-    if not bug :
-        count += 1
+def FindByPrime(num) :
+   global sum
+   global primeCh
+   global data
+
+   if num == 1 :
+      return
+
+   bug = False
+
+   for i in range(2, num) :
+      if num % i == 0 :
+         bug = True
+   if not bug:
+      data.append(num)
+      sum += num
+      primeCh = False
 
 
-print(count)
+# main
+for num in range(m, n + 1) :
+   if num != 2 :
+      FindByPrime(num)
+   else :
+      data.append(num)
+      sum += num
+      primeCh = False
+
+
+
+
+if primeCh :
+   data.append(-1)
+
+data.sort()
+min = data[0]
+
+if not primeCh :
+   print(sum)
+print(min)
