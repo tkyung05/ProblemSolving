@@ -1,16 +1,18 @@
-import sys
-T = int(input())
+num = int(input())
 
-data = [[10], [1], [2, 4, 8, 6],
-        [3, 9, 7, 1], [4, 6], [5], [6],
-        [7, 9, 3, 1], [8, 4, 2, 6], [9, 1]]
+def prime(i) : # 소수 확인
+    if i == num or i % 2 != 0 or i == 2 :
+        return True
+    else :
+        return False
 
-def f(a, b) :
-    a %= 10
-    b %= len(data[a])
-    return data[a][b - 1]
+def main() : # 인수 확인
+    for i in range(2, num + 1) :
+        if num % i == 0 and prime(i):
+            return i
 
-for _ in range(T) :
-    a, b = map(int, sys.stdin.readline().split())
-    print(f(a, b))
+while num > 1 :
+    result = main()
+    print(result)
+    num //= result
 
