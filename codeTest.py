@@ -1,18 +1,33 @@
-num = int(input())
+import sys
 
-def prime(i) : # 소수 확인
-    if i == num or i % 2 != 0 or i == 2 :
-        return True
-    else :
-        return False
+limit = 123456
 
-def main() : # 인수 확인
-    for i in range(2, num + 1) :
-        if num % i == 0 and prime(i):
-            return i
+eratos_data = [True] * (2 * limit + 1)
+eratos_data[0], eratos_data[1] = False, False
 
-while num > 1 :
-    result = main()
-    print(result)
-    num //= result
+for i in range(2, int(len(eratos_data) ** 0.5)) :
+    if eratos_data[i] :
+        for j in range(i + i, len(eratos_data), i) :
+            eratos_data[j] = False
+
+
+while True :
+    n = int(sys.stdin.readline())
+    count = 0
+    if n == 0 :
+        break
+
+    if n == 1 :
+        print(1)
+        continue
+
+    for i in range(n + 1, 2 * n) :
+        if eratos_data[i] :
+            count += 1
+
+    print(count)
+
+
+
+
 
