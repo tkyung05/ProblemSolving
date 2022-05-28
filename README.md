@@ -1,1 +1,1 @@
-# Today I Soved 🤓.
+# Today I Solved 🤓.
