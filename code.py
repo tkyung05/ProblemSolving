@@ -2,14 +2,13 @@ import sys
 T = int(input())
 
 for _ in range(T):
-    H, W, N = map(int, sys.stdin.readline().split())
-    result = 0  
+    K = int(sys.stdin.readline())
+    N = int(sys.stdin.readline()) 
+    F = [n for n in range(1, N + 1)]
 
-    if N % H == 0:
-        result = (H * 100) + (N // H)
-    else :
-        result = (N % H * 100) + (N // H + 1)
-
-    print(result)
+    for _ in range(K):
+        for i in range(1, N):
+            F[i] += F[i - 1]
+    print(F[-1])
 
     
