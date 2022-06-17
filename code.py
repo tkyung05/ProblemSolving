@@ -1,27 +1,22 @@
-import sys
-T = int(input())
+def draw_star(n, data):
+    new_data = []
+    if n == 3:
+        return data
+    else:
+        for i in data:
+            new_data.append(i * 3)
+        for i in data:
+            new_data.append(i + ' ' * len(data) + i)
+        for i in data:
+            new_data.append(i * 3)
+        
+        return draw_star(n//3, new_data)
+    
 
-limit = 10000
+n = int(input())
+default_data = ['***', '* *', '***']
+result_data = draw_star(n, default_data)
 
-eratos_data = [True] * (limit + 1)
-eratos_data[0], eratos_data[1] = False, False
-
-for i in range(2, int(len(eratos_data) ** 0.5)) :
-    if eratos_data[i] :
-        for j in range(i + i, len(eratos_data), i) :
-            eratos_data[j] = False
-
-
-for _ in range(T):
-    n = int(sys.stdin.readline())
-    min = 10000
-    a, b = 0, 0
-    r = 0
-
-    for i in range(n // 2, n):
-        r = n - i
-        if eratos_data[i] and eratos_data[r]:
-            if min > i - r:
-                min = i - r
-                a, b = r, i
-    print (f'{a} {b}')
+for i in result_data:
+    print(i)
+        
