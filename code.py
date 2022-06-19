@@ -1,13 +1,22 @@
-n, m = map(int, input().split())
-data = list(map(int, input().split()))
-result = 0
+n = int(input())
 
-for i in range(n):
-    for j in range(i+1, n):
-        for k in range(j+1, n):
-            if data[i] + data[j] + data[k] > m:
-                continue
-            else:
-                result = max(result, data[i] + data[j] + data[k])
+result_data = []
+not_found = False
 
-print(result)
+for i in range(1, n):
+    data = str(i)
+    leng = len(data)
+    div_list = []
+
+    for j in range(leng):
+        div_list.append(int(data[j]))
+
+    if i + sum(div_list) == n:
+        result_data.append(i)
+        not_found = True
+
+if not_found:
+    result_data.sort()
+    print(result_data[0])
+else:
+    print(0)
