@@ -1,22 +1,20 @@
-n = int(input())
+import sys
 
-result_data = []
-not_found = False
+T = int(input())
+x_data = []
+y_data = []
+rank_data = []
 
-for i in range(1, n):
-    data = str(i)
-    leng = len(data)
-    div_list = []
+for _ in range(T):
+    x, y = map(int, sys.stdin.readline().split())
+    x_data.append(x)
+    y_data.append(y)
 
-    for j in range(leng):
-        div_list.append(int(data[j]))
+for i in range(T):
+    count = 1
+    for j in range(T):
+        if x_data[j] > x_data[i] and y_data[j] > y_data[i]:
+            count += 1
+    rank_data.append(count)
 
-    if i + sum(div_list) == n:
-        result_data.append(i)
-        not_found = True
-
-if not_found:
-    result_data.sort()
-    print(result_data[0])
-else:
-    print(0)
+print(*rank_data)
