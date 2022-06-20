@@ -1,19 +1,15 @@
-import sys
-from collections import Counter
+from random import randrange
+from unittest import result
 
-T = int(input())
-data = []
-for i in range(T):
-    data.append(int(sys.stdin.readline()))
-data.sort()
 
-print(round(sum(data) / T)) 
-print(data[T // 2])
+n = input()
 
-count_data = Counter(data).most_common()
-if len(count_data) > 1 and count_data[0][1] == count_data[1][1]:
-    print(count_data[1][0])
-else:
-    print(count_data[0][0])
+result_list = []
+for i in range(len(list(n))):
+    result_list.append(int(n[i]))
+result_list.sort(reverse=True)
 
-print(data[T - 1] - data[0])
+for i in result_list:
+    print(i, end='')
+
+
