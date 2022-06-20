@@ -1,12 +1,19 @@
 import sys
-n = int(input())
-data = [0] * 10001
+from collections import Counter
 
-for _ in range(n):
-    data[int(sys.stdin.readline())] += 1 
+T = int(input())
+data = []
+for i in range(T):
+    data.append(int(sys.stdin.readline()))
+data.sort()
 
-for i in range(len(data)):
-    if data[i] != 0:
-        for _ in range(data[i]):
-            print(i)
+print(round(sum(data) / T)) 
+print(data[T // 2])
 
+count_data = Counter(data).most_common()
+if len(count_data) > 1 and count_data[0][1] == count_data[1][1]:
+    print(count_data[1][0])
+else:
+    print(count_data[0][0])
+
+print(data[T - 1] - data[0])
