@@ -1,20 +1,9 @@
-import sys
-
 n = int(input())
-age_order_data = []
-name_data = {}
+num_data = list(map(int, input().split()))
 
-for i in range(n):
-  temp, name = sys.stdin.readline().split()
-  age = int(temp)
+set_data = sorted(set(num_data))
+dic_data = {set_data[i] : i for i in range(len(set_data))}
+
+for i in num_data:
+  print(dic_data[i], end=' ')
   
-  age_order_data.append((age, i))
-  name_data.update({str(i) : name})
-
-age_order_data.sort()
-
-for i in range(len(age_order_data)):
-  print(age_order_data[i][0], name_data[str(age_order_data[i][1])])
-
-
-    
