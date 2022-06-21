@@ -1,15 +1,14 @@
-from random import randrange
-from unittest import result
+import sys
 
+n = int(input())
+data = []
 
-n = input()
+for i in range(n):
+  x, y = map(int, sys.stdin.readline().split())
+  data.append([x, y])
+data.sort()
 
-result_list = []
-for i in range(len(list(n))):
-    result_list.append(int(n[i]))
-result_list.sort(reverse=True)
+for i in range(n):
+  print(data[i][0], data[i][1])
 
-for i in result_list:
-    print(i, end='')
-
-
+    
