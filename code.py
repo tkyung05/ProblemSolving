@@ -1,3 +1,12 @@
-x, y, w, h = map(int, input().split())
+n = int(input())
+card_data = list(map(int, input().split()))
+m = int(input())
+get_data = list(map(int, input().split()))
 
-print(min(x, y, w-x, h-y))
+result_dict = {card_data[i] : 1 for i in range(len(card_data))}
+
+for i in range(len(get_data)):
+    if get_data[i] in result_dict:
+        print(1, end=' ')
+    else:
+        print(0, end=' ')
