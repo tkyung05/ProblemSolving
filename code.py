@@ -1,52 +1,25 @@
-import sys
+n = int(input())
+data = list(map(int, input().split()))
+data.sort()
 
-def str_check(data):
-    for i in range(len(list(data))):
-        # 소괄호 조건
-        if data[i] == '(':
-            stack.append('(')
+result = [0, 0]
+cont_num = 2000000001
 
-        elif data[i] == ')':
-            if len(list(stack)) == 0:
-                return 'no'
-            elif len(list(stack)) != 0:
-                if stack[-1] == '[':
-                    return 'no'
-                else:
-                    stack.pop()
-                
+Left = 0
+Right = len(data) - 1
 
-        # 대괄호 조건 
-        elif data[i] == '[':
-            stack.append('[')
+while Left < Right:
+    sum = data[Left] + data[Right]
+    if abs(sum) < cont_num:
+        cont_num = abs(sum)
+        result[0], result[1] = data[Left], data[Right]
 
-        elif data[i] == ']':
-            if len(list(stack)) == 0:
-                return 'no'
-            elif len(list(stack)) != 0:
-                if stack[-1] == '(':
-                    return 'no'
-                else:
-                    stack.pop()
-
-        # 기타 문자열 넘기기
-        else:
-            continue
-
-    if len(list(stack)) == 0:
-        return 'yes'
+    elif sum < 0:
+        Left += 1
     else:
-        return 'no'
-    
-    
+        Right -= 1
 
-
-while True:
-    data = sys.stdin.readline()
-    if data[0] == '.' and data[1] == '\n':
-        break 
-
-    stack = []
-    print(str_check(data))
-    
-    
+if result[1] > result[0]:
+    print(result[0], result[1])
+else:
+    print(result[1], result[0])
