@@ -1,26 +1,29 @@
+import sys
 n = int(input())
-data = list(map(int, input().split()))
-data.sort()
 
-result = [0, 0]
-cont_num = 2000000001
+stack = []
+result = []
+count = 1
 
-Left = 0
-Right = len(data) - 1
+def check_stack():
+    global count
+    for _ in range(n):
+        num = int(sys.stdin.readline())
 
-while Left < Right:
-    sum = data[Left] + data[Right]
+        while count <= num:
+            stack.append(count)
+            result.append("+")
+            count += 1
 
-    if abs(sum) < cont_num:
-        cont_num = abs(sum)
-        result[0], result[1] = data[Left], data[Right]
-        if cont_num == 0:
-            break
+        if stack[-1] == num:
+            stack.pop()
+            result.append("-")
+        else:
+            return True
 
-    elif sum < 0:
-        Left += 1
-    else:
-        Right -= 1
 
-print(result[0], result[1])
-
+if check_stack():
+    print('NO')
+else:
+    for i in result:
+        print(i)
