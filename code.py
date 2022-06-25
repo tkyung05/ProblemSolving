@@ -1,15 +1,15 @@
 import sys
+total = int(sys.stdin.readline())
 n = int(sys.stdin.readline())
-A_data = list(map(int, sys.stdin.readline().split()))
 
-stack = []
-result = [-1] * n
+sum_data = [0] * n 
 
 for i in range(n):
-    while len(stack) != 0 and A_data[stack[-1]] < A_data[i]:
-        result[stack[-1]] = A_data[i]
-        stack.pop()
-        
-    stack.append(i)
+    x, y = map(int, sys.stdin.readline().split())
+    sum_data[i] = x * y
 
-print(*result)
+if total == sum(sum_data):
+    print('Yes')
+else:
+    print('No')
+
