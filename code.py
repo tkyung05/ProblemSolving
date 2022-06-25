@@ -1,29 +1,15 @@
 import sys
-n = int(input())
+n = int(sys.stdin.readline())
+A_data = list(map(int, sys.stdin.readline().split()))
 
 stack = []
-result = []
-count = 1
+result = [-1] * n
 
-def check_stack():
-    global count
-    for _ in range(n):
-        num = int(sys.stdin.readline())
+for i in range(n):
+    while len(stack) != 0 and A_data[stack[-1]] < A_data[i]:
+        result[stack[-1]] = A_data[i]
+        stack.pop()
+        
+    stack.append(i)
 
-        while count <= num:
-            stack.append(count)
-            result.append("+")
-            count += 1
-
-        if stack[-1] == num:
-            stack.pop()
-            result.append("-")
-        else:
-            return True
-
-
-if check_stack():
-    print('NO')
-else:
-    for i in result:
-        print(i)
+print(*result)
