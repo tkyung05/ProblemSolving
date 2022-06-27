@@ -1,13 +1,13 @@
 import sys
 n = int(sys.stdin.readline())
-a_data = list(map(int, sys.stdin.readline().split()))
-b_data = list(map(int, sys.stdin.readline().split()))
-
-a_data.sort()
-b_data.sort(reverse=True)
-
-result = 0
+data = [0] * n
 for i in range(n):
-    result += a_data[i] * b_data[i]
+    data[i] = int(sys.stdin.readline())
+data.sort(reverse=True)
 
-print(result)
+result = []
+for i in range(n):
+    result.append(data[i] * (i + 1))
+
+print(max(result))
+
