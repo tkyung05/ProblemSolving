@@ -1,13 +1,20 @@
 import sys
 n = int(sys.stdin.readline())
-data = [0] * n
+data = []
 for i in range(n):
-    data[i] = int(sys.stdin.readline())
-data.sort(reverse=True)
+    a, b = map(int, sys.stdin.readline().split())
+    data.append([b, a])
+data.sort()
 
-result = []
+count = 0
+point = 0
+before_time = -1
+
 for i in range(n):
-    result.append(data[i] * (i + 1))
-
-print(max(result))
-
+    if data[i][1] >= before_time:
+        before_time = data[i][0]
+        count += 1
+    else:
+        continue
+    
+print(count)
