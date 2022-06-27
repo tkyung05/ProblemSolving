@@ -1,26 +1,30 @@
 import sys
-n, m = map(int, sys.stdin.readline().split())
-data = [0] * n
+n = int(sys.stdin.readline())
+queue = []
 for i in range(n):
-    data[i] = int(sys.stdin.readline())
-data.sort()
-
-left = 0
-right = 1
-most_min = 2000000000
-
-while left < n and  right < n:
-    sub = data[right] - data[left]
-
-    if most_min > sub and m <= sub:
-        most_min = sub
-        if most_min == m:
-            break
-        left += 1
+    cmd = list(sys.stdin.readline().split())
+    if cmd[0] == 'push':
+        queue.append(int(cmd[1]))
+    elif cmd[0] == 'pop':
+        if len(queue) != 0:
+            print(queue.pop(0))
+        else:
+            print(-1)
+    elif cmd[0] == 'size':
+        print(len(queue))
+    elif cmd[0] == 'empty':
+        if len(queue) == 0:
+            print(1)
+        else:
+            print(0)
+    elif cmd[0] == 'front':
+        if len(queue) != 0:
+            print(queue[0])
+        else:
+            print(-1)
+    elif cmd[0] == 'back':
+        if len(queue) != 0:
+            print(queue[-1])
+        else:
+            print(-1)
     
-    elif sub > m:
-        left += 1
-    elif sub < m:
-        right += 1
-
-print(most_min)
