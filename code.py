@@ -1,13 +1,17 @@
-import sys
-data = list(sys.stdin.readline().split('-'))
+limit = 7368787
+eratos_data = [True] * (limit + 1)
+eratos_data[0], eratos_data[1] = False, False
 
-result = []
-for i in data:
-    temp = list(map(int, i.split('+')))
-    result.append(sum(temp))
+for i in range(2, int(len(eratos_data) ** 0.5)):
+    if eratos_data[i]:
+        for j in range(i + i, len(eratos_data), i):
+            eratos_data[j] = False
 
-ans = result[0]
-for i in range(1, len(result)):
-    ans -= result[i]
-
-print(ans)
+count = 0
+n = int(input())
+for i in range(len(eratos_data)):
+    if eratos_data[i]:
+        count += 1
+        if count == n:
+            print(i)
+            break
