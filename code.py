@@ -1,20 +1,14 @@
 import sys
 n = int(sys.stdin.readline())
-data = []
-for i in range(n):
-    a, b = map(int, sys.stdin.readline().split())
-    data.append([b, a])
-data.sort()
+leng_data = list(map(int, sys.stdin.readline().split()))
+oil_data = list(map(int, sys.stdin.readline().split()))
 
-count = 0
-point = 0
-before_time = -1
+result = 0
+now_oil = oil_data[0]
 
-for i in range(n):
-    if data[i][1] >= before_time:
-        before_time = data[i][0]
-        count += 1
-    else:
-        continue
-    
-print(count)
+for i in range(n - 1):
+    result += now_oil * leng_data[i] 
+    if now_oil > oil_data[i + 1]:
+        now_oil = oil_data[i + 1]
+
+print(result)
