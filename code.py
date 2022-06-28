@@ -1,17 +1,12 @@
 import sys
 n = int(sys.stdin.readline())
-
-tip = [0] * n
+data = [0] * n
 for i in range(n):
-    tip[i] = int(sys.stdin.readline())
-tip.sort(reverse=True)
+    data[i] = int(sys.stdin.readline())
+data.sort(reverse=True)
 
-result = []
-for i in range(n):
-    v = tip[i] - i
-    if v > 0:
-        result.append(v)
-    else:
-        continue
+sub = 0
+for i in range(2, n, 3):
+    sub += data[i]
 
-print(sum(result))
+print(sum(data) - sub)
