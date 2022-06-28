@@ -1,17 +1,17 @@
-limit = 7368787
-eratos_data = [True] * (limit + 1)
-eratos_data[0], eratos_data[1] = False, False
+import sys
+n = int(sys.stdin.readline())
 
-for i in range(2, int(len(eratos_data) ** 0.5)):
-    if eratos_data[i]:
-        for j in range(i + i, len(eratos_data), i):
-            eratos_data[j] = False
+tip = [0] * n
+for i in range(n):
+    tip[i] = int(sys.stdin.readline())
+tip.sort(reverse=True)
 
-count = 0
-n = int(input())
-for i in range(len(eratos_data)):
-    if eratos_data[i]:
-        count += 1
-        if count == n:
-            print(i)
-            break
+result = []
+for i in range(n):
+    v = tip[i] - i
+    if v > 0:
+        result.append(v)
+    else:
+        continue
+
+print(sum(result))
