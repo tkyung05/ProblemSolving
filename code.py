@@ -1,46 +1,31 @@
-from collections import deque
 import sys
+n, m = map(int, sys.stdin.readline().split())
 
-n = int(sys.stdin.readline())
-deque_data = deque()
+graph = []
 for i in range(n):
-    cmd = list(sys.stdin.readline().split())
-    
-    if cmd[0] == 'push_front':
-        deque_data.appendleft(int(cmd[1]))
-    
-    elif cmd[0] == 'push_back':
-        deque_data.append(int(cmd[1]))
-    
-    elif cmd[0] == 'pop_front':
-        if deque_data:
-            print(deque_data.popleft())
-        else:
-            print(-1)
-    
-    elif cmd[0] == 'pop_back':
-        if deque_data:
-            print(deque_data.pop())
-        else:
-            print(-1)
+    graph.append(list(map(int, sys.stdin.readline())))
 
-    elif cmd[0] == 'size':
-        print(len(deque_data))
-    
-    elif cmd[0] == 'empty':
-        if deque_data:
-            print(0)
-        else:
-            print(1)
-    
-    elif cmd[0] == 'front':
-        if deque_data:
-            print(deque_data[0])
-        else:
-            print(-1)
-    
-    elif cmd[0] == 'back':
-        if deque_data:
-            print(deque_data[-1])
-        else:
-            print(-1)
+def bfs(x, y):
+    if x < 0 or x >= n or y < 0 or y >= m:
+        return False
+    if graph[x, y] == 0:
+        graph[x, y] = 1 # 방문 처리
+
+        # 재귀로 주변 상하좌우 모두 호출하여 방문처리
+        bfs(x - 1, y) 
+        bfs(x + 1, y)
+        bfs(x, y - 1)
+        bfs(x, y + 1)
+
+        # 처음 0 발견한 한번만 True 리턴
+        return True
+    # 1이라면 그냥 False 리턴 
+    return False
+
+result = 0
+for i in range(n):
+    for j in range(m):
+        if bfs(i, j) == True:
+            result += 1
+
+print(result)
