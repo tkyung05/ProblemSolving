@@ -1,43 +1,33 @@
-import sys
+from collections import deque
 
-def check(x, y):
-    if x < 0 or x >= h or y < 0 or y >= w:
-        return False
+h, w = map(int, input().split())
 
-    if graph[x][y] == 1:
-        graph[x][y] = 0 
+def bfs_check(x, y):
+    queue = deque()
+    queue.append((x, y))
 
-        # 재귀로 주변 상하좌우 모두 호출하여 방문처리
-        check(x - 1, y) 
-        check(x + 1, y)
-        check(x, y - 1)
-        check(x, y + 1)
-        # 킹각선..
-        check(x - 1, y - 1) 
-        check(x - 1, y + 1)
-        check(x + 1, y - 1)
-        check(x + 1, y + 1)
+    while queue:
+        x, y = queue.popleft()
 
-        # 처음 0 발견한 한번만 True 리턴
-        return True
-    # 1 이라면 그냥 False 리턴 
-    return False
+        for i in range(4):
+            nx = x + dx[i]
+            ny = y + dy[i]
 
+            if nx < 0 or nx >= h or ny < 0 or ny >= w:
+                continue
+            if graph[nx][ny] != 1:
+                continue
+            
+            graph[nx][ny] = graph[x][y] + 1
+            queue.append((nx, ny))
+    return print(graph[h - 1][w - 1])
+        
 
-
-while True:
-    w, h = map(int, sys.stdin.readline().split())
+graph = []
+for _ in range(h):
+    graph.append(list(map(int, input())))
     
-    if w + h == 0:
-        break
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
 
-    graph = []
-    for _ in range(h):
-        graph.append(list(map(int, input().split())))
-
-    count = 0
-    for i in range(h):
-        for j in range(w):
-            if check(i, j) == True:
-                count += 1
-    print(count)
+bfs_check(0, 0)
