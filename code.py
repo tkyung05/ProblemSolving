@@ -1,52 +1,40 @@
-from collections import deque
+import sys
+sys.setrecursionlimit(10**4)
 
-n = int(input())
-
-data = []
-def bfs_finder(x, y):
-    if graph[x][y] == 0 or graph[x][y] == 2:
-        return 0
-    
-    count = 1
-
-    queue_data = deque()
-    queue_data.append((x, y))
-    graph[x][y] = 2
-    
-    while queue_data:
-        x, y = queue_data.popleft()
-
-        for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]        
-
-            if nx < 0 or nx >= n or ny < 0 or ny >= n:
-                continue
-            if graph[nx][ny] == 1:
-                count += 1
-                graph[nx][ny] = 2
-                queue_data.append((nx, ny))
-
-    return count
-                    
-
-
-graph = []
-for _ in range(n):
-    graph.append(list(map(int, input())))
+T = int(input())
 
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 
+def dfs_finder(x, y):
+    if x < 0 or x >= h or y < 0 or y >= w:
+        return False
 
-for i in range(n):
-    for j in range(n):
-        num = bfs_finder(i, j)
-        if num != 0:
-            data.append(num)
+    if cab_graph[x][y] == 1:
+        cab_graph[x][y] = 0 # 방문 처리
+        
+        for i in range(4):
+            nx = x + dx[i]
+            ny = y + dy[i]
+            dfs_finder(nx, ny)
+        return True
 
-data.sort()
-print(len(data))
+    return False
+        
 
-for i in data:
-    print(i)
+for _ in range(T):
+    w, h, k = map(int, input().split())
+    cab_graph = [[0 for _ in range(w)] for _ in range(h)]
+
+    for _ in range(k):
+        x, y = map(int, input().split())
+        cab_graph[y][x] = 1
+
+    count = 0
+    for i in range(h):
+        for j in range(w):
+            if dfs_finder(i, j):
+                count += 1
+    
+    print(count)
+    
