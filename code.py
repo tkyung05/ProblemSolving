@@ -1,32 +1,52 @@
 from collections import deque
 
-v, e = map(int, input().split())
+n = int(input())
 
-graph = [[] for _ in range(v + 1)]
-visited = [False] * (v + 1)
+max_num = 0
+graph = []
+for i in range(n):
+    graph.append(list(map(int, input().split())))
+    
+    for j in range(n):
+        if max_num < graph[i][j]:
+            max_num = graph[i][j]
 
-for i in range(e):
-    n1, n2 = map(int, input().split())
-    graph[n1].append(n2)
-    graph[n2].append(n1)
 
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
 
-def bfs(start):
+def bfs(x, y, value, visited):
     queue = deque()
-    queue.append(start)
-    visited[start] = True
+    queue.append((x, y))
+    visited[x][y] = True
 
     while queue:
-        cur_node = queue.popleft()
-        for i in graph[cur_node]:
-            if not visited[i]:
-                queue.append(i)
-                visited[i] = True
-        
+        cx, cy = queue.popleft()
+        for i in range(4):
+            nx = cx + dx[i]
+            ny = cy + dy[i]
+
+            if nx < 0 or nx >= n or ny < 0 or ny >= n:
+                continue
+            if graph[nx][ny] > value and not visited[nx][ny]:
+                queue.append((nx, ny))
+                visited[nx][ny] = True
+
+
 result = 0
-for i in range(1, v + 1):
-    if not visited[i]:
-        bfs(i)
-        result += 1
+for i in range(max_num):
+    visited = [[False] * n for _ in range(n)]
     
+    count = 0
+    for j in range(n):
+        for k in range(n):
+            if graph[j][k] > i and not visited[j][k]:
+                bfs(j, k, i, visited)
+                count += 1
+
+    if result < count:
+        result = count
+
 print(result)
+    
+    
