@@ -29,7 +29,7 @@ bfs_finder(1)
 
 result = 0
 for i in range(2, com+1):
-    if visited[i]:
+    if visited[i]: 
         result += 1
     
 print(result)
