@@ -1,54 +1,35 @@
-import sys
 from collections import deque
-sys.setrecursionlimit(10**4)
+
+com = int(input())
+n_pair = int(input())
+
+graph = [[] for _ in range(com+1)]
+visited = [False] * (com + 1)
+
+for _ in range(n_pair):
+    n1, n2 = map(int, input().split())
+    graph[n1].append(n2)
+    graph[n2].append(n1)
 
 
-def bfs_finder(x, y):
-    if graph[x][y] == 0:
-        return 0
-    
+def bfs_finder(start):
     queue = deque()
-    queue.append((x, y))
-    graph[x][y] = 0
+    queue.append(start)
+    visited[start] = True
     
-    count = 1
     while queue:
-        x, y = queue.popleft()
+        cur_node = queue.popleft()
 
-        for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
+        for i in graph[cur_node]:
+            if not visited[i]:
+                queue.append(i)
+                visited[i] = True
 
-            if nx < 0 or nx >= h or ny < 0 or ny >= w:
-                continue
-            if graph[nx][ny] == 1:
-                count += 1
-                queue.append((nx, ny))
-                graph[nx][ny] = 0
+bfs_finder(1)
+
+result = 0
+for i in range(2, com+1):
+    if visited[i]:
+        result += 1
     
-    return count
-
-
-h, w = map(int, input().split())
-
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
-
-graph = []
-for _ in range(h):
-    graph.append(list(map(int, input().split())))
-
-result = []
-for i in range(h):
-    for j in range(w):
-        num = bfs_finder(i, j)
-        if num != 0:
-            result.append(num)
-            
-if len(result) == 0:
-    print(0)
-    print(0)
-else:
-    result.sort(reverse=True)
-    print(len(result))
-    print(result[0])    
+print(result)
