@@ -1,44 +1,31 @@
-from collections import deque
+n = int(input())
 
-v, e, start = map(int, input().split())
+org_count = 0
 
-graph = [[] for _ in range(v + 1)]
+def original_fibo(n):
+    global org_count
 
-dfs_visited = [False] * (v + 1)
-bfs_visited = [False] * (v + 1)
+    if n == 1 or n == 2:
+        org_count += 1
+        return 1
 
-for _ in range(e):
-    n1, n2 = map(int, input().split())
-    graph[n1].append(n2)
-    graph[n2].append(n1)
-
-for i in range(1, v + 1):
-    graph[i].sort()
+    return original_fibo(n - 1) + original_fibo(n - 2)
 
 
-def bfs(start):
-    queue = deque()
-    queue.append(start)
-    bfs_visited[start] = True
+memo = [0] * 41
+dp_count = 0
 
-    while queue:
-        cur_v = queue.popleft()
-        print(cur_v, end=' ')
+def dp_fibo(n):
+    global dp_count
+    memo[1] = 1
+    memo[2] = 1
 
-        for i in graph[cur_v]:
-            if not bfs_visited[i]:
-                queue.append(i)
-                bfs_visited[i] = True
+    for i in range(3, n + 1):
+        memo[i] = memo[i - 1] + memo[i - 2]
+        dp_count += 1
+    return memo[n]
 
-def dfs(start):
-    dfs_visited[start] = True
-    print(start, end=' ')
+original_fibo(n)
+dp_fibo(n)
 
-    for i in graph[start]:
-        if not dfs_visited[i]:
-            dfs(i)
-
-
-dfs(start)
-print()
-bfs(start)
+print(org_count, dp_count)
