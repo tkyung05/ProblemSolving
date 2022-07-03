@@ -1,52 +1,44 @@
 from collections import deque
 
-n = int(input())
+v, e, start = map(int, input().split())
 
-max_num = 0
-graph = []
-for i in range(n):
-    graph.append(list(map(int, input().split())))
-    
-    for j in range(n):
-        if max_num < graph[i][j]:
-            max_num = graph[i][j]
+graph = [[] for _ in range(v + 1)]
+
+dfs_visited = [False] * (v + 1)
+bfs_visited = [False] * (v + 1)
+
+for _ in range(e):
+    n1, n2 = map(int, input().split())
+    graph[n1].append(n2)
+    graph[n2].append(n1)
+
+for i in range(1, v + 1):
+    graph[i].sort()
 
 
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
-
-def bfs(x, y, value, visited):
+def bfs(start):
     queue = deque()
-    queue.append((x, y))
-    visited[x][y] = True
+    queue.append(start)
+    bfs_visited[start] = True
 
     while queue:
-        cx, cy = queue.popleft()
-        for i in range(4):
-            nx = cx + dx[i]
-            ny = cy + dy[i]
+        cur_v = queue.popleft()
+        print(cur_v, end=' ')
 
-            if nx < 0 or nx >= n or ny < 0 or ny >= n:
-                continue
-            if graph[nx][ny] > value and not visited[nx][ny]:
-                queue.append((nx, ny))
-                visited[nx][ny] = True
+        for i in graph[cur_v]:
+            if not bfs_visited[i]:
+                queue.append(i)
+                bfs_visited[i] = True
+
+def dfs(start):
+    dfs_visited[start] = True
+    print(start, end=' ')
+
+    for i in graph[start]:
+        if not dfs_visited[i]:
+            dfs(i)
 
 
-result = 0
-for i in range(max_num):
-    visited = [[False] * n for _ in range(n)]
-    
-    count = 0
-    for j in range(n):
-        for k in range(n):
-            if graph[j][k] > i and not visited[j][k]:
-                bfs(j, k, i, visited)
-                count += 1
-
-    if result < count:
-        result = count
-
-print(result)
-    
-    
+dfs(start)
+print()
+bfs(start)
