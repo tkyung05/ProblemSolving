@@ -1,26 +1,35 @@
 import sys
+sys.setrecursionlimit(10 ** 5)
 
-n = int(sys.stdin.readline())
-data = list(map(int, sys.stdin.readline().split()))
-data.sort()
+v, e, start = map(int, input().split())
 
-m = int(sys.stdin.readline())
-target_data = list(map(int, sys.stdin.readline().split()))
+visited = [False] * (v + 1)
+graph = [[] for _ in range(v + 1)]
 
-def bin_search(target, start, end):
-    if start > end:
-        return print(0)
-    
-    mid = (start + end) // 2
-    
-    if data[mid] == target:
-        return print(1)
+for _ in range(e):
+    n1, n2 = map(int, input().split())
+    graph[n1].append(n2)
+    graph[n2].append(n1)
 
-    elif data[mid] < target:
-        bin_search(target, mid + 1, end)
-    elif data[mid] > target:
-        bin_search(target, start, mid - 1)
+for i in range(1, v + 1):
+    graph[i].sort()
+
+data = []
+def dfs(start):
+    visited[start] = True
+    data.append(start)
+
+    for i in graph[start]:
+        if not visited[i]:
+            dfs(i)
+
+dfs(start)
+
+result = [0] * (v + 1)
+for i in range(len(data)):
+    result[data[i]] = i + 1
+
+for i in range(1, len(result)):
+    print(result[i])
 
 
-for i in target_data:
-    bin_search(i, 0, n - 1)
