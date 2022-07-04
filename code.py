@@ -1,31 +1,26 @@
-n = int(input())
+import sys
 
-org_count = 0
+n = int(sys.stdin.readline())
+data = list(map(int, sys.stdin.readline().split()))
+data.sort()
 
-def original_fibo(n):
-    global org_count
+m = int(sys.stdin.readline())
+target_data = list(map(int, sys.stdin.readline().split()))
 
-    if n == 1 or n == 2:
-        org_count += 1
-        return 1
+def bin_search(target, start, end):
+    if start > end:
+        return print(0)
+    
+    mid = (start + end) // 2
+    
+    if data[mid] == target:
+        return print(1)
 
-    return original_fibo(n - 1) + original_fibo(n - 2)
+    elif data[mid] < target:
+        bin_search(target, mid + 1, end)
+    elif data[mid] > target:
+        bin_search(target, start, mid - 1)
 
 
-memo = [0] * 41
-dp_count = 0
-
-def dp_fibo(n):
-    global dp_count
-    memo[1] = 1
-    memo[2] = 1
-
-    for i in range(3, n + 1):
-        memo[i] = memo[i - 1] + memo[i - 2]
-        dp_count += 1
-    return memo[n]
-
-original_fibo(n)
-dp_fibo(n)
-
-print(org_count, dp_count)
+for i in target_data:
+    bin_search(i, 0, n - 1)
