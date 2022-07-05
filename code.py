@@ -1,35 +1,23 @@
-import sys
 from collections import deque
 
-h, w = map(int, sys.stdin.readline().split())
-graph = []
-for i in range(h):
-    graph.append(list(map(int, sys.stdin.readline().split())))
+n, k = map(int, input().split())
+max_num = 100001
 
-dx = [-1, 1, 0, 0, 1, 1, -1, -1]
-dy = [0, 0, -1, 1, 1, -1, 1, -1]
+pos = [0] * max_num
 
-def bfs(x, y):
-    queue = deque()
-    queue.append((x, y))
-    graph[x][y] = 2
+def bfs(x):
+    queue = deque([x])
     
     while queue:
-        x, y = queue.popleft()
-        for i in range(8):
-            nx, ny = x + dx[i], y + dy[i]
-            
-            if nx < 0 or nx >= h or ny < 0 or ny >= w:
-                continue
-            if graph[nx][ny] == 1:
-                graph[nx][ny] = 2
-                queue.append((nx, ny))
-    
-result = 0
-for i in range(h):
-    for j in range(w):
-        if graph[i][j] == 1:
-            bfs(i, j)
-            result += 1
+        x = queue.popleft()
+        if x == k:
+            return pos[x]
 
-print(result)
+        for nx in (x - 1, x + 1, x * 2):
+            if nx < 0 or nx >= max_num:
+                continue
+            if not pos[nx]:
+                pos[nx] = pos[x] + 1
+                queue.append(nx)
+
+print(bfs(n))
