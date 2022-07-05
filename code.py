@@ -1,23 +1,43 @@
 from collections import deque
+import sys
 
-n, k = map(int, input().split())
-max_num = 100001
 
-pos = [0] * max_num
+T = int(sys.stdin.readline())
 
-def bfs(x):
-    queue = deque([x])
+dx = [2, 2, 1, 1, -2, -2, -1, -1]
+dy = [1, -1, 2, -2, 1, -1, 2, -2]
+
+def bfs(x, y, dis_x, dis_y, n, visited):
+    queue = deque([(x, y)])
+    visited[x][y] = True
     
     while queue:
-        x = queue.popleft()
-        if x == k:
-            return pos[x]
+        x, y = queue.popleft()
+        if x == dis_x and y == dis_y:
+            return graph[x][y]
 
-        for nx in (x - 1, x + 1, x * 2):
-            if nx < 0 or nx >= max_num:
+        for i in range(8):
+            nx, ny = x + dx[i], y + dy[i]
+
+            if nx < 0 or nx >= n or ny < 0 or ny >= n:
                 continue
-            if not pos[nx]:
-                pos[nx] = pos[x] + 1
-                queue.append(nx)
+            if not visited[nx][ny]:
+                graph[nx][ny] = graph[x][y] + 1
+                visited[nx][ny] = True
+                queue.append((nx, ny))
 
-print(bfs(n))
+
+
+for _ in range(T):
+    n = int(sys.stdin.readline())
+    x, y = map(int, sys.stdin.readline().split())
+    dis_x, dis_y = map(int, sys.stdin.readline().split())
+
+    graph = [[0] * n for _ in range(n)]
+    visited = [[False] * n for _ in range(n)]
+
+    print(bfs(x, y, dis_x, dis_y, n, visited))
+    
+
+    
+    
