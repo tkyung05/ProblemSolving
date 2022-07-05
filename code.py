@@ -1,13 +1,32 @@
-n, m = map(int, input().split(':'))
+from collections import deque
 
-def GCD(n, m):
-    while True:
-        tmp = n % m
-        if tmp == 0:
-            return m
-        n = m
-        m = tmp 
-        
-GCD_num = GCD(max(n, m), min(n, m))
+n = int(input())
+leng = int(input())
 
-print(f'{n // GCD_num}:{m // GCD_num}')
+graph = [[] for _ in range(n + 1)]
+visited = [0] * (n + 1)
+
+for i in range(leng):
+    n1, n2 = map(int, input().split())
+    graph[n1].append(n2)
+    graph[n2].append(n1)
+
+def bfs():
+    queue = deque([1])
+    visited[1] = 1
+    count = 0
+
+    while queue:
+        v = queue.popleft()
+
+        if visited[v] == 3:
+            return count
+
+        for i in graph[v]:
+            if not visited[i]:
+                count += 1
+                visited[i] = visited[v] + 1
+                queue.append(i)
+    return count
+
+print(bfs())
