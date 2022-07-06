@@ -1,28 +1,17 @@
+from cgi import print_arguments
 from collections import deque
 
-a, b = map(int, input().split())
+n = int(input())
 
-limit = 1000000001
-graph = {}
+queue = deque()
+for i in range(1, n + 1):
+    queue.append(i)
 
-def bfs(a):
-    queue = deque([a])
-    graph[str(a)] = 1
+while True:
+    queue.popleft()
+    if len(queue) == 1:
+        break
+    c = queue.popleft()
+    queue.append(c)
 
-    while queue:
-        n = queue.popleft()
-        one_n = int(str(n) + '1')
-
-        if n == b:
-            return print(graph[str(n)]) 
-
-        for i in (n*2, one_n):
-            if i < 0 or i >= limit:
-                continue
-            if not str(i) in graph:
-                graph[str(i)] = graph[str(n)] + 1
-                queue.append(i)
-
-    return print(-1)
-
-bfs(a)
+print(queue.pop())
