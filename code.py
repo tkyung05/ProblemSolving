@@ -1,44 +1,39 @@
 from collections import deque
+import sys
 
-h, w = map(int, input().split())
+n, m = map(int, sys.stdin.readline().split())
 
-graph = []
-for _ in range(h):
-    graph.append(list(map(int, input())))
+item = {}
+for _ in range(n+m):
+    n1, n2 = map(int, sys.stdin.readline().split())
+    item[str(n1)] = n2
 
-visited = [[False] * w for _ in range(h)]
+graph = [0] * 101
+dice = [1, 2, 3, 4, 5, 6]
 
-dx = [0, 0, -1, 1]
-dy = [-1, 1, 0, 0]
-
-def bfs(sy, sx):
-    queue = deque([(sy, sx)])
-    visited[sy][sx] = True
+def bfs():
+    queue = deque([1])
+    graph[1] = 1
     
     while queue:
-        y, x = queue.popleft()
-        for i in range(4):
-            ny, nx = y + dy[i], x + dx[i]
-            if ny < 0 or ny >= h or nx < 0 or nx >= w:
+        cur_pos = queue.popleft()
+        if cur_pos == 100:
+            return graph[cur_pos] - 1
+
+        for i in range(6):
+            new_pos = cur_pos + dice[i]
+            
+            if new_pos > 100:
                 continue
-            if graph[ny][nx] == 0 and not visited[ny][nx]:
-                visited[ny][nx] = True
-                queue.append((ny, nx))
+            
+            if str(new_pos) in item and graph[new_pos] == 0:
+                if graph[item[str(new_pos)]] == 0:
+                    new_pos = item[str(new_pos)]
+                    graph[new_pos] = graph[cur_pos] + 1
+                    queue.append(new_pos)
 
-for i in range(w):
-    if graph[0][i] == 0 and not visited[0][i]:
-        bfs(0, i)
+            elif graph[new_pos] == 0:
+                graph[new_pos] = graph[cur_pos] + 1
+                queue.append(new_pos)
 
-trig = False
-for i in range(w):
-    if graph[h-1][i] == 0 and visited[h-1][i]:
-        trig = True
-        break
-
-if trig:
-    print('YES')
-else:
-    print('NO')
-
-
-
+print(bfs())
