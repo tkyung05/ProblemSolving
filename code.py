@@ -1,39 +1,25 @@
 from collections import deque
-import sys
 
-n, m = map(int, sys.stdin.readline().split())
+f, start, goal, u, d = map(int, input().split()) 
 
-item = {}
-for _ in range(n+m):
-    n1, n2 = map(int, sys.stdin.readline().split())
-    item[str(n1)] = n2
-
-graph = [0] * 101
-dice = [1, 2, 3, 4, 5, 6]
+graph = [0] * (f + 1)
 
 def bfs():
-    queue = deque([1])
-    graph[1] = 1
-    
+    queue = deque([start])
+    graph[start] = 1
+
     while queue:
         cur_pos = queue.popleft()
-        if cur_pos == 100:
+
+        if cur_pos == goal:
             return graph[cur_pos] - 1
 
-        for i in range(6):
-            new_pos = cur_pos + dice[i]
-            
-            if new_pos > 100:
+        for new_pos in (cur_pos+u, cur_pos+(d*-1)):
+            if new_pos < 1 or new_pos > f:
                 continue
-            
-            if str(new_pos) in item and graph[new_pos] == 0:
-                if graph[item[str(new_pos)]] == 0:
-                    new_pos = item[str(new_pos)]
-                    graph[new_pos] = graph[cur_pos] + 1
-                    queue.append(new_pos)
-
-            elif graph[new_pos] == 0:
+            if graph[new_pos] == 0:
                 graph[new_pos] = graph[cur_pos] + 1
                 queue.append(new_pos)
+    return 'use the stairs'
 
 print(bfs())
