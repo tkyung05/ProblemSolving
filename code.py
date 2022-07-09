@@ -1,41 +1,70 @@
-from collections import deque
 import sys
+from collections import deque
+input = sys.stdin.readline
 
-n = int(sys.stdin.readline())
+h, w = map(int, input().split())
 
-queue = deque()
+input_graph = []
+for _ in range(h):
+    input_graph.append(list(map(int, input().split())))
 
-for _ in range(n):
-    cmd = list(sys.stdin.readline().split())
 
-    if cmd[0] == 'push':
-        queue.append(int(cmd[1]))
-    elif cmd[0] == 'pop':
-        if queue:
-            print(queue.popleft())
-        else:
-            print(-1)
-    elif cmd[0] == 'size':
-        print(len(queue))
-    elif cmd[0] == 'empty':
-        if queue:
-            print(0)
-        else:
-            print(1)
-    elif cmd[0] == 'front':
-        if queue:
-            print(queue[0])
-        else:
-            print(-1)
-    elif cmd[0] == 'back':
-        if queue:
-            print(queue[-1])
-        else:
-            print(-1)
-         
-           
-         
+dy = [1, -1, 0, 0]
+dx = [0, 0, -1, 1]
+
+def ice_berg_search(graph):
+    temp_graph = [[0] * w for _ in range(h)]
+
+    for i in range(h):
+        for j in range(w):
+            if graph[i][j] != 0:
+                count = 0
+                for k in range(4):
+                    ny, nx = i + dy[k], j + dx[k]
+                    if graph[ny][nx] == 0:
+                        count += 1
+                cur_ice = graph[i][j] - count
+                if cur_ice < 0:
+                    cur_ice = 0
+                
+                temp_graph[i][j] = cur_ice
+
+    return temp_graph
+
+def bfs(y, x, graph, visited):
+    queue = deque([(y, x)])
+    visited[y][x] = True
+
+    while queue:
+        y, x = queue.popleft()
+        for i in range(4):
+            ny, nx = y + dy[i], x + dx[i]
+            if graph[ny][nx] != 0 and not visited[ny][nx]:
+                visited[ny][nx] = True
+                queue.append((ny, nx))
+    return visited
+
+
+check_graph = ice_berg_search(input_graph)
+result = 1
+
+while True:
+    visited = [[False] * w for _ in range(h)]
+    count = 0
+
+    for i in range(h):
+        for j in range(w):
+            if check_graph[i][j] != 0 and not visited[i][j]:
+                visited = bfs(i, j, check_graph, visited)
+                count += 1
     
-
-
-
+    if count > 1:
+        print(result)
+        break
+    elif count == 0:
+        print(0)
+        break
+    else:
+        check_graph = ice_berg_search(check_graph)
+        result += 1 
+    
