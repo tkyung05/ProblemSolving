@@ -1,24 +1,40 @@
-import heapq
+from collections import deque
 import sys
 
-n = int(input())
+n = int(sys.stdin.readline())
 
-heap = []
+queue = deque()
+
 for _ in range(n):
-    heapq.heappush(heap, int(sys.stdin.readline()))
+    cmd = list(sys.stdin.readline().split())
 
-result = 0
-
-while len(heap) > 1:
-    f_card = heapq.heappop(heap)
-    s_card = heapq.heappop(heap)
-    
-    temp = f_card + s_card
-    result += temp
-    heapq.heappush(heap, temp)
-
-print(result)
-    
+    if cmd[0] == 'push':
+        queue.append(int(cmd[1]))
+    elif cmd[0] == 'pop':
+        if queue:
+            print(queue.popleft())
+        else:
+            print(-1)
+    elif cmd[0] == 'size':
+        print(len(queue))
+    elif cmd[0] == 'empty':
+        if queue:
+            print(0)
+        else:
+            print(1)
+    elif cmd[0] == 'front':
+        if queue:
+            print(queue[0])
+        else:
+            print(-1)
+    elif cmd[0] == 'back':
+        if queue:
+            print(queue[-1])
+        else:
+            print(-1)
+         
+           
+         
     
 
 
