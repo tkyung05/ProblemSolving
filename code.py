@@ -1,25 +1,25 @@
-from collections import deque
+import heapq
+import sys
 
-f, start, goal, u, d = map(int, input().split()) 
+n = int(input())
 
-graph = [0] * (f + 1)
+heap = []
+for _ in range(n):
+    heapq.heappush(heap, int(sys.stdin.readline()))
 
-def bfs():
-    queue = deque([start])
-    graph[start] = 1
+result = 0
 
-    while queue:
-        cur_pos = queue.popleft()
+while len(heap) > 1:
+    f_card = heapq.heappop(heap)
+    s_card = heapq.heappop(heap)
+    
+    temp = f_card + s_card
+    result += temp
+    heapq.heappush(heap, temp)
 
-        if cur_pos == goal:
-            return graph[cur_pos] - 1
+print(result)
+    
+    
 
-        for new_pos in (cur_pos+u, cur_pos+(d*-1)):
-            if new_pos < 1 or new_pos > f:
-                continue
-            if graph[new_pos] == 0:
-                graph[new_pos] = graph[cur_pos] + 1
-                queue.append(new_pos)
-    return 'use the stairs'
 
-print(bfs())
+
