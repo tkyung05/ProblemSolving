@@ -1,13 +1,19 @@
-n = int(input())
+import sys
+input = sys.stdin.readline
 
-count = 666
-result = 0
-while True:
-    if '666' in str(count):
-        result += 1
-        if result == n:
-            print(count)
+n = list(map(str, input()))
+
+UCPC_data = ['U', 'C', 'P', 'C']
+cur_index = 0
+bug = True
+
+for i in n:
+    if i == UCPC_data[cur_index]:
+        cur_index += 1
+        if cur_index == 4:
+            print('I love UCPC')
+            bug = False
             break
-        count += 1
-    else:
-        count += 1
+
+if bug:
+    print('I hate UCPC')
