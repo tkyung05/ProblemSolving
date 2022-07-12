@@ -1,39 +1,40 @@
 import sys
-import heapq
 input = sys.stdin.readline
 INF = int(1e9)
 
-v, e, k, start = map(int, input().split())
+v, e = map(int, input().split())
 
-graph = [[] for _ in range(v + 1)]
-distance = [INF] * (v + 1)
+graph = [[INF] * (v + 1) for _ in range(v + 1)]
+
+for i in range(1, v + 1):
+    for j in range(1, v + 1):
+        if i == j:
+            graph[i][j] = 0
+            break
 
 for _ in range(e):
     n1, n2 = map(int, input().split())
-    graph[n1].append((n2, 1))
+    graph[n1][n2] = 1
+    graph[n2][n1] = 1 
 
-def dijkstar(start):
-    q = []
-    distance[start] = 0
-    heapq.heappush(q, (0, start))
+for k in range(1, v + 1):
+    for i in range(1, v + 1):
+        for j in range(1, v + 1):
+            graph[i][j] = min(graph[i][j], graph[i][k] + graph[k][j])
 
-    while q:
-        dis, node = heapq.heappop(q)
-        if distance[node] < dis:
-            continue
-        for i in graph[node]:
-            cost = dis + i[1]
-            if cost < distance[i[0]]:
-                distance[i[0]] = cost
-                heapq.heappush(q, (cost, i[0]))
+result = []
 
-dijkstar(start)
-
-bug = True
 for i in range(1, v + 1):
-    if distance[i] == k:
-        print(i)
-        bug = False
+    count = 0
+    for j in range(1, v + 1):
+        count += graph[i][j]
+    result.append((count, i))
 
-if bug:
-    print(-1)
+result.sort()
+
+print(result[0][1])
+
+
+
+
+    
