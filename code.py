@@ -1,31 +1,39 @@
 import sys
+import heapq
 input = sys.stdin.readline
 INF = int(1e9)
 
-v = int(input())
-e = int(input())
+v, e, k, start = map(int, input().split())
 
-distance_graph = [[INF] * (v + 1) for _ in range(v + 1)]
-
-for i in range(1, v + 1):
-    for j in range(1, v + 1):
-        if i == j:
-            distance_graph[i][j] = 0
-            break
+graph = [[] for _ in range(v + 1)]
+distance = [INF] * (v + 1)
 
 for _ in range(e):
-    n1, n2, dis = map(int, input().split())
-    distance_graph[n1][n2] = min(distance_graph[n1][n2], dis)
+    n1, n2 = map(int, input().split())
+    graph[n1].append((n2, 1))
 
-for k in range(1, v + 1):
-    for i in range(1, v + 1):
-        for j in range(1, v + 1):
-            distance_graph[i][j] = min(distance_graph[i][j], distance_graph[i][k] + distance_graph[k][j])
+def dijkstar(start):
+    q = []
+    distance[start] = 0
+    heapq.heappush(q, (0, start))
 
+    while q:
+        dis, node = heapq.heappop(q)
+        if distance[node] < dis:
+            continue
+        for i in graph[node]:
+            cost = dis + i[1]
+            if cost < distance[i[0]]:
+                distance[i[0]] = cost
+                heapq.heappush(q, (cost, i[0]))
+
+dijkstar(start)
+
+bug = True
 for i in range(1, v + 1):
-    for j in range(1, v + 1):
-        if distance_graph[i][j] >= INF:
-            print(0, end=' ')
-        else:
-            print(distance_graph[i][j], end=' ')
-    print()
+    if distance[i] == k:
+        print(i)
+        bug = False
+
+if bug:
+    print(-1)
