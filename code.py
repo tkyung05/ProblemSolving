@@ -1,41 +1,34 @@
 import sys
-from collections import deque
+import heapq
 input = sys.stdin.readline
+INF = int(1e9)
 
-n, k = map(int, input().split())
+v = int(input())
+e = int(input())
 
-graph = []
-for _ in range(n):
-    graph.append(list(map(int, input().split())))
+graph = [[] for _ in range(v + 1)]
+distance = [INF] * (v + 1) 
 
-temp = []
-for i in range(n):
-    for j in range(n):
-        if graph[i][j] != 0:
-            temp.append((graph[i][j], 0, i, j))
+for _ in range(e):
+    n1, n2, dis = map(int, input().split())
+    graph[n1].append((n2, dis))
 
-temp.sort()
-queue = deque(temp)
+start_v, target_v = map(int, input().split())
 
-time, dist_y, dist_x = map(int, input().split())
+def dijkstra(start):
+    q = []
+    heapq.heappush(q, (0, start))
+    distance[start] = 0
+    
+    while q:
+        dis, node = heapq.heappop(q)
+        if distance[node] < dis:
+            continue
+        for i in graph[node]:
+            cost = dis + i[1]
+            if cost < distance[i[0]]:
+                distance[i[0]] = cost
+                heapq.heappush(q, (cost, i[0]))
 
-dy = [-1, 1, 0, 0]
-dx = [0, 0, -1, 1]
-
-def bfs():
-    while queue:
-        virus_num, sec, y, x = queue.popleft()
-
-        if sec == time:
-            break
-
-        for i in range(4):
-            ny, nx = y + dy[i], x + dx[i]
-            if ny < 0 or ny >= n or nx < 0 or nx >= n:
-                continue
-            if graph[ny][nx] == 0:
-                graph[ny][nx] = virus_num
-                queue.append((virus_num, sec + 1, ny, nx)) 
-bfs()
-print(graph[dist_y - 1][dist_x - 1])
-
+dijkstra(start_v)
+print(distance[target_v])
