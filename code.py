@@ -1,21 +1,34 @@
-import heapq
 import sys
 input = sys.stdin.readline
 
-n, m = map(int, input().split())
+limit = 1000000
+eratos_data = [True] * (limit + 1)
+eratos_data[0], eratos_data[1] = False, False
 
-temp = list(map(int, input().split()))
+for i in range(2, int(len(eratos_data) ** 0.5)):
+    if eratos_data[i]:
+        for j in range(i + i, len(eratos_data), i):
+            eratos_data[j] = False
 
-card = []
-for i in temp:
-    heapq.heappush(card, i)
+prime_data = []
+for i in range(2, len(eratos_data)):
+    if eratos_data[i]:
+        prime_data.append(i)
 
-for i in range(m):
-    a = heapq.heappop(card)
-    b = heapq.heappop(card)
+while True:
+    n = int(input())
 
-    sum_num = a + b
-    heapq.heappush(card, sum_num)
-    heapq.heappush(card, sum_num)
-
-print(sum(card))
+    if n == 0:
+        break
+    
+    bug = True
+    for i in prime_data:
+        back = n - i
+        if eratos_data[back] and back % 2 != 0:
+            front = i
+            bug = False
+            break
+    if bug:
+        prime_data('Goldbach\'s conjecture is wrong.')
+    else:
+        print(f'{n} = {front} + {back}')
