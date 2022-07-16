@@ -1,21 +1,20 @@
-import sys
 import heapq
+import sys
 input = sys.stdin.readline
 
 n = int(input())
 
-quest = []
+test_score = []
 for _ in range(n):
-    p, d = map(int, input().split())
-    quest.append((d, p))
-quest.sort()
+    test_score.append(tuple(map(int, input().split())))
+
+test_score.sort()
 
 result = []
-for i in range(n):
-    day, point = quest[i]
-    heapq.heappush(result, point)
-    
+for day, score in test_score:
+    heapq.heappush(result, score)
+
     if len(result) > day:
         heapq.heappop(result)
-    
+
 print(sum(result))
