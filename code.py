@@ -1,25 +1,21 @@
 import sys
+import heapq
 input = sys.stdin.readline
 
 n = int(input())
-crains = list(map(int, input().split()))
-k = int(input())
-boxs = list(map(int, input().split()))
 
-crains.sort(reverse=True)
-boxs.sort(reverse=True)
+quest = []
+for _ in range(n):
+    p, d = map(int, input().split())
+    quest.append((d, p))
+quest.sort()
 
-result = 0
-if crains[0] < boxs[0]:
-    result = -1
-else:
-    while boxs:
-        result += 1
-
-        for c in crains:
-            for i in range(len(boxs)):
-                if c >= boxs[i]:
-                    boxs.pop(i)
-                    break
-            
-print(result)
+result = []
+for i in range(n):
+    day, point = quest[i]
+    heapq.heappush(result, point)
+    
+    if len(result) > day:
+        heapq.heappop(result)
+    
+print(sum(result))
