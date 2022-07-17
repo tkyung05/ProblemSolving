@@ -1,48 +1,20 @@
+import heapq
 import sys
-from collections import deque
 input = sys.stdin.readline
 
-T = int(input())
+n = int(input())
 
-def bfs(n):
-    q = deque([n])
-    visited[n] = 1
+data = []
+for _ in range(n):
+    d, n = map(int, input().split())
+    data.append((d, n))
+data.sort()
 
-    while q:
-        n = q.popleft()
+result = []
+for day, noodle in data:
+    heapq.heappush(result, noodle)
 
-        for i in graph[n]:
-            if visited[i] == 0:
-                visited[i] = visited[n] * -1
-                q.append(i)
-            else:
-                if visited[n] == visited[i]:
-                    return False
-    return True
+    if len(result) > day:
+        heapq.heappop(result)
 
-
-for _ in range(T):
-    v, e = map(int, input().split())
-
-    visited = [0] * (v + 1)
-    graph = [[] for _ in range(v + 1)]
-
-    for _ in range(e):
-        n1, n2 = map(int, input().split())
-        graph[n1].append(n2)
-        graph[n2].append(n1)
-
-    bug = False
-
-    for i in range(1, v + 1):
-        if visited[i] == 0:
-            if not bfs(i):
-                bug = True
-                break
-    
-    if bug:
-        print('NO')
-    else:
-        print('YES')
-
-    
+print(sum(result))
