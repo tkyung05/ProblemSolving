@@ -1,25 +1,34 @@
-import heapq
 import sys
 input = sys.stdin.readline
 
-T = int(input())
-for _ in range(T):
-    n = int(input())
-    input_files = list(map(int, input().split()))
-    
-    files = []
-    for i in input_files:
-        heapq.heappush(files, i)
+n, m = map(int, input().split())
 
-    result = 0
-    while len(files) > 1:
-        one = heapq.heappop(files)
-        two = heapq.heappop(files)
+data = []
+for i in range(n):
+    w, p = map(int, input().split())
+    data.append((p, w * -1))
+data.sort()
+
+sum_weight, same_price = 0, 0
+result = []
+
+for i in range(len(data)):
+    p, w = data[i]
+
+    sum_weight += w * -1
+
+    if i > 0 and p == data[i - 1][0]:
+        same_price += p
+    else:
+        same_price = p
+
+    if sum_weight >= m:
+        result.append(same_price)
         
-        new_file = one + two
-        result += new_file 
-        heapq.heappush(files, new_file)
+        if same_price == p:
+            break
     
-    print(result)
-
-    
+if sum_weight < m:
+    print(-1)
+else:
+    print(min(result))
