@@ -2,19 +2,24 @@ import heapq
 import sys
 input = sys.stdin.readline
 
-n = int(input())
+T = int(input())
+for _ in range(T):
+    n = int(input())
+    input_files = list(map(int, input().split()))
+    
+    files = []
+    for i in input_files:
+        heapq.heappush(files, i)
 
-data = []
-for _ in range(n):
-    d, n = map(int, input().split())
-    data.append((d, n))
-data.sort()
+    result = 0
+    while len(files) > 1:
+        one = heapq.heappop(files)
+        two = heapq.heappop(files)
+        
+        new_file = one + two
+        result += new_file 
+        heapq.heappush(files, new_file)
+    
+    print(result)
 
-result = []
-for day, noodle in data:
-    heapq.heappush(result, noodle)
-
-    if len(result) > day:
-        heapq.heappop(result)
-
-print(sum(result))
+    
