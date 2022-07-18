@@ -1,34 +1,38 @@
-import sys
-input = sys.stdin.readline
+from collections import deque
 
-n, m = map(int, input().split())
+def bfs(y, x):
+    q = deque([(y, x)])
+    visited[y][x] = 1
 
-data = []
-for i in range(n):
-    w, p = map(int, input().split())
-    data.append((p, w * -1))
-data.sort()
+    while q:
+        y, x = q.popleft()
+        for i in range(4):
+            ny, nx = y + dy[i], x + dx[i]
 
-sum_weight, same_price = 0, 0
-result = []
+            if ny < 0 or ny >= h or nx < 0 or nx >= w:
+                continue
+            if graph[ny][nx] == '#' and visited[ny][nx] == 0:
+                visited[ny][nx] = 1
+                q.append((ny, nx))
 
-for i in range(len(data)):
-    p, w = data[i]
+T = int(input())
 
-    sum_weight += w * -1
+dy = [-1, 1, 0, 0]
+dx = [0, 0, -1, 1]
 
-    if i > 0 and p == data[i - 1][0]:
-        same_price += p
-    else:
-        same_price = p
-
-    if sum_weight >= m:
-        result.append(same_price)
-        
-        if same_price == p:
-            break
+for _ in range(T):
+    h, w = map(int, input().split())
     
-if sum_weight < m:
-    print(-1)
-else:
-    print(min(result))
+    visited = [[0] * w for _ in range(h) ]
+    graph = []
+    for _ in range(h):
+        graph.append(list(map(str, input().strip('\n'))))
+    
+    result = 0
+    for i in range(h):
+        for j in range(w):
+            if graph[i][j] == '#' and visited[i][j] == 0:
+                bfs(i, j)
+                result += 1
+    
+    print(result)
