@@ -1,41 +1,48 @@
 import sys
 from collections import deque
 input = sys.stdin.readline
+limit = 100000
+
+dx = [1, 2]
 
 def bfs(n):
     q = deque([(n)])
     graph[n] = 1
-    move[n] = -1
 
     while q:
         x = q.popleft()
 
-        if x == k:
-            return graph[x] - 1
+        if graph[x] - 1 > t:
+            return 'ANG'
+        if x == g:
+            return graph[x] - 1 
 
-        for nx in (x*2, x+1, x-1):
-            if nx < 0 or nx > 100000:
-                continue
+        for i in range(2):
+            if i == 0:
+                btn = x + dx[i]
+                if btn >= limit:
+                    continue
+                
+            elif i == 1:
+                btn = x * dx[i]
+                if btn >= limit:
+                    continue
+                if btn > 0 and btn < 10:
+                    btn -= 1
+                elif btn > 0:
+                    btn = btn - (10 ** (len(str(btn))-1))
+
+            if graph[btn] == 0:
+                graph[btn] = graph[x] + 1
+                q.append(btn)
+
+    return 'ANG'
+                
+
     
-            if graph[nx] == 0:
-                graph[nx] = graph[x] + 1
-                move[nx] = x
-                q.append(nx)
 
 
-n, k = map(int, input().split())
-graph = [0] * 100001
-move = [0] * 100001
+graph = [0] * limit
+n, t, g = map(int, input().split())
 
 print(bfs(n))
-
-move_data = []
-while True:
-    if k == -1:
-        break
-    move_data.append(k)
-    k = move[k]
-
-for i in reversed(move_data):
-    print(i, end=' ')
-
