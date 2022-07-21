@@ -3,19 +3,42 @@ input = sys.stdin.readline
 
 n = int(input())
 
-data = [0] * n
+graph = []
+for _ in range(n):
+    graph.append(list(map(str, input().strip('\n'))))
+
+max_result = 1
+
+def search():
+    global max_result
+
+    for i in range(n):
+        w_count = 1
+        h_count = 1
+        for j in range(n - 1):
+            if graph[i][j] == graph[i][j + 1]:
+                w_count += 1
+                max_result = max(max_result, w_count)
+            if graph[i][j] != graph[i][j + 1]:
+                w_count = 1
+
+            if graph[j][i] == graph[j + 1][i]:
+                h_count += 1
+                max_result = max(max_result, h_count)
+            if graph[j][i] != graph[j + 1][i]:
+                h_count = 1
+
+
 for i in range(n):
-    data[i] = int(input())
-data.reverse()
+    for j in range(n - 1):
+        if graph[i][j] != graph[i][j + 1]:
+            graph[i][j], graph[i][j + 1] = graph[i][j + 1], graph[i][j]
+            search()
+            graph[i][j], graph[i][j + 1] = graph[i][j + 1], graph[i][j]
 
+        if graph[j][i] != graph[j + 1][i]:
+            graph[j][i], graph[j + 1][i] = graph[j + 1][i], graph[j][i]
+            search()
+            graph[j][i], graph[j + 1][i] = graph[j + 1][i], graph[j][i]
 
-result = 0
-for i in range(n - 1):
-    cur, pront = data[i], data[i + 1]
-
-    if cur <= pront:
-        min_gap = pront - cur + 1
-        result += min_gap
-        data[i + 1] = pront - min_gap
-
-print(result)
+print(max_result)
