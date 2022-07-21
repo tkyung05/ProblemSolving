@@ -1,18 +1,26 @@
 import sys
 input = sys.stdin.readline
 
-n = int(input())
-data = []
-for _ in range(n):
-    data.append(list(map(int, input().split())))
+while True:
+    try:
+        n = int(input())
+    except:
+        break
 
-visited = [False] * 1000001
-count = 0
-for a, b, c in data:
-    if not visited[a] and not visited[b] and not visited[c]:
-        count += 1
-    visited[a] = True
-    visited[b] = True
-    visited[c] = True
+    if n == 1:
+        print(1)
+        continue
 
-print(count)
+    one_num = 1
+    while True:
+        one_num = one_num * 10 + 1
+        
+        if one_num % n == 0:
+            break 
+    
+    print(len(str(one_num)))
+    
+
+        
+        
+
