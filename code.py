@@ -1,40 +1,19 @@
 import sys
-sys.setrecursionlimit(100000)
 input = sys.stdin.readline
 
-def dfs(node, count):
-    global check
+n = int(input())
+h_data = list(map(int, input().split()))
 
-    if count == 5:
-        check = True
-        return
+h_memo = [0] * 1000001
+
+result = 0
+for i in h_data:
+    if h_memo[i] == 0:
+        h_memo[i - 1] = h_memo[i - 1] + 1
+        result += 1
     
-    visited[node] = True
-    
-    for i in graph[node]:
-        if not visited[i]:
-            dfs(i, count + 1)
-            visited[i] = False
+    elif h_memo[i] > 0:
+        h_memo[i] = h_memo[i] - 1
+        h_memo[i - 1] = h_memo[i - 1] + 1
 
-
-n, e = map(int, input().split())
-
-graph = [[] for _ in range(n)]
-for _ in range(e):
-    n1, n2 = map(int, input().split())
-    graph[n1].append(n2)
-    graph[n2].append(n1)
-
-check = False
-visited = [False] * n
-
-for i in range(n):
-    if check:
-        break
-    dfs(i, 1)
-    visited[i] = False
-
-if check:
-    print(1)
-else:
-    print(0)
+print(result)  
