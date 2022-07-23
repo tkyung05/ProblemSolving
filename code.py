@@ -1,34 +1,27 @@
 import sys
 input = sys.stdin.readline
 
-T = int(input())
+n = int(input())
 
-for _ in range(T):
-    n = int(input())
-    tree = list(map(int, input().split()))
-    tree.sort()
+dough_price, topping_price = map(int, input().split())
+dough_kcal = int(input())
 
-    prev_one, prev_two = 0, 0
-    one, two = 0, 1
+topping_kcal = [0] * n
+for i in range(n):
+    topping_kcal[i] = int(input())
+topping_kcal.sort(reverse=True)
 
-    result = 0
-    while two < n:
-        if one == 0:
-            result = max(result, abs(tree[one] - tree[two]))
-        else:
-            result = max(result, abs(tree[one] - prev_one), abs(tree[two] - prev_two))
-        prev_one = tree[one]
-        prev_two = tree[two]
+re_price = dough_price
+re_kcal = dough_kcal
 
-        if two == (n - 2) and n % 2 == 1:
-            result = max(result, abs(tree[one + 2] - prev_one))
-            prev_one = tree[one + 2]
+result = dough_kcal / dough_price 
+for k in topping_kcal:
+    new_k = (re_kcal + k) / (re_price + topping_price)
+    if result < new_k:
+        result = new_k
+        re_kcal += k 
+        re_price += topping_price
+    else:
+        break
 
-        one += 2
-        two += 2 
-    
-    print(max(result, abs(prev_one - prev_two)))
-    
-        
-    
-    
+print(int(result))
