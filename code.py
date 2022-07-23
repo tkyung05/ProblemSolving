@@ -1,36 +1,18 @@
 import sys
 input = sys.stdin.readline
 
-T = int(input())
+n, k = map(int, input().split())
+data = list(map(int, input().strip('\n')))
 
-def search_palin(string, r, l):
-    while r < l:
-        if string[r] != string[l]:
-            return False
-        r += 1
-        l -= 1
-
-    return True
-        
+result = []
+for i in range(n):
+    while k > 0 and result:
+        if result[-1] < data[i]:
+            result.pop()
+            k -= 1
+        else:
+            break
+    result.append(data[i])
     
-for _ in range(T):
-    string = list(map(str, input().strip('\n')))
-
-    r, l = 0, len(string) - 1
-    result = 0
-
-    while r < l:
-        if string[r] != string[l]:
-            if search_palin(string, r + 1, l) or search_palin(string, r, l - 1):
-                result = 1
-                break
-            else:
-                result = 2
-                break
-        r += 1
-        l -= 1
-            
-    print(result)
-    
-    
-    
+for i in range(len(result) - k):
+    print(result[i], end='')
