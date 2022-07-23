@@ -1,18 +1,34 @@
 import sys
 input = sys.stdin.readline
 
-n, k = map(int, input().split())
-data = list(map(int, input().strip('\n')))
+T = int(input())
 
-result = []
-for i in range(n):
-    while k > 0 and result:
-        if result[-1] < data[i]:
-            result.pop()
-            k -= 1
+for _ in range(T):
+    n = int(input())
+    tree = list(map(int, input().split()))
+    tree.sort()
+
+    prev_one, prev_two = 0, 0
+    one, two = 0, 1
+
+    result = 0
+    while two < n:
+        if one == 0:
+            result = max(result, abs(tree[one] - tree[two]))
         else:
-            break
-    result.append(data[i])
+            result = max(result, abs(tree[one] - prev_one), abs(tree[two] - prev_two))
+        prev_one = tree[one]
+        prev_two = tree[two]
+
+        if two == (n - 2) and n % 2 == 1:
+            result = max(result, abs(tree[one + 2] - prev_one))
+            prev_one = tree[one + 2]
+
+        one += 2
+        two += 2 
     
-for i in range(len(result) - k):
-    print(result[i], end='')
+    print(max(result, abs(prev_one - prev_two)))
+    
+        
+    
+    
