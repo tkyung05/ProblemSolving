@@ -1,19 +1,36 @@
 import sys
 input = sys.stdin.readline
 
-n = int(input())
-h_data = list(map(int, input().split()))
+T = int(input())
 
-h_memo = [0] * 1000001
+def search_palin(string, r, l):
+    while r < l:
+        if string[r] != string[l]:
+            return False
+        r += 1
+        l -= 1
 
-result = 0
-for i in h_data:
-    if h_memo[i] == 0:
-        h_memo[i - 1] = h_memo[i - 1] + 1
-        result += 1
+    return True
+        
     
-    elif h_memo[i] > 0:
-        h_memo[i] = h_memo[i] - 1
-        h_memo[i - 1] = h_memo[i - 1] + 1
+for _ in range(T):
+    string = list(map(str, input().strip('\n')))
 
-print(result)  
+    r, l = 0, len(string) - 1
+    result = 0
+
+    while r < l:
+        if string[r] != string[l]:
+            if search_palin(string, r + 1, l) or search_palin(string, r, l - 1):
+                result = 1
+                break
+            else:
+                result = 2
+                break
+        r += 1
+        l -= 1
+            
+    print(result)
+    
+    
+    
