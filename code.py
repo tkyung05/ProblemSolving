@@ -2,26 +2,27 @@ import sys
 input = sys.stdin.readline
 
 n = int(input())
+m = int(input())
 
-dough_price, topping_price = map(int, input().split())
-dough_kcal = int(input())
+btn = [True] * 10
 
-topping_kcal = [0] * n
-for i in range(n):
-    topping_kcal[i] = int(input())
-topping_kcal.sort(reverse=True)
+if m != 0: 
+    error_btn = list(map(int, input().split()))
+    for i in error_btn: btn[i] = False    
 
-re_price = dough_price
-re_kcal = dough_kcal
+result = abs(n - 100) 
+limit = 1000000
 
-result = dough_kcal / dough_price 
-for k in topping_kcal:
-    new_k = (re_kcal + k) / (re_price + topping_price)
-    if result < new_k:
-        result = new_k
-        re_kcal += k 
-        re_price += topping_price
-    else:
-        break
+# 버튼을 눌러서 갈 수 있는 모든 경우의수를 탐색하여 최소값을 갱신 
+for i in range(limit):
+    num = str(i)
+    bug = False
 
-print(int(result))
+    for j in num:
+        if not btn[int(j)]:
+            bug = True
+            break
+    
+    if not bug: result = min(abs(int(num) - n)  + len(num), result)
+
+print(result)
