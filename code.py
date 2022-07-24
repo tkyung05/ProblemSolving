@@ -2,27 +2,28 @@ import sys
 input = sys.stdin.readline
 
 n = int(input())
-m = int(input())
+alpa_data = [list(map(str, input().strip('\n'))) for _ in range(n)]
 
-btn = [True] * 10
+dict_alpa = {}
 
-if m != 0: 
-    error_btn = list(map(int, input().split()))
-    for i in error_btn: btn[i] = False    
+# 각 알파벳의 현재 위치에 따라 10의 제곱으로 크기를 정하고, 알파벳의 종류에 따라 dict에 저장 또는 더함
+for word in alpa_data:
+    leng = len(word) - 1
 
-result = abs(n - 100) 
-limit = 1000000
+    for k in word:
+        if k in dict_alpa:
+            dict_alpa[k] += 10 ** leng
+        else:
+            dict_alpa[k] = 10 ** leng
+        leng -= 1
 
-# 버튼을 눌러서 갈 수 있는 모든 경우의수를 탐색하여 최소값을 갱신 
-for i in range(limit):
-    num = str(i)
-    bug = False
+# 위에서 정한 값이 클 수록 우선 순위가 높아지기 때문에 내림차순 정렬
+data = sorted(dict_alpa.values(), reverse=True)
 
-    for j in num:
-        if not btn[int(j)]:
-            bug = True
-            break
-    
-    if not bug: result = min(abs(int(num) - n)  + len(num), result)
+# 우선 순위에 따라 9, 8, 7... 순으로 곱해줌
+result, num = 0, 9
+for i in data:
+    result += i * num
+    num -= 1
 
 print(result)
