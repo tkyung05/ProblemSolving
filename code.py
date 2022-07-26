@@ -15,13 +15,12 @@ def dfs(count):
         return 
     
     for i in data:
-        if not visited[i]:
+        if not visited[i] and len(result) == 0 or result[-1] < i:
             visited[i] = True
             result.append(i)
             dfs(count + 1)
             
             visited[i] = False
             result.pop()
-
 
 dfs(0)
