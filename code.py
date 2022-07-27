@@ -1,33 +1,24 @@
 import sys
 input = sys.stdin.readline
 
+main_editor = list(map(str, input().strip('\n')))
 n = int(input())
-num_data = list(map(int, input().split()))
-op_data = list(map(int, input().split()))
 
-min_result = 1e9
-max_result = -1e9
+side_editor = []
 
-def dfs(count, total, plus, minus, mul, div):
-    global min_result
-    global max_result
+for _ in range(n):
+    cmd = list(map(str, input().split()))
 
-    if count == n:
-        min_result = min(min_result, total)
-        max_result = max(max_result, total)
-        return
-    
-    if plus > 0:
-        dfs(count + 1, total + num_data[count], plus - 1, minus, mul, div)
-    if minus > 0:
-        dfs(count + 1, total - num_data[count], plus, minus - 1, mul, div)
-    if mul > 0:
-        dfs(count + 1, total * num_data[count], plus, minus, mul - 1, div)
-    if div > 0:
-        dfs(count + 1, int(total / num_data[count]), plus, minus, mul, div - 1)
+    if cmd[0] == 'P':
+        main_editor.append(cmd[1])
+    elif cmd[0] == 'L' and main_editor:
+        side_editor.append(main_editor.pop())
+    elif cmd[0] == 'D' and side_editor:
+        main_editor.append(side_editor.pop())
+    elif cmd[0] == 'B' and main_editor:
+        main_editor.pop()
 
+if side_editor:
+    side_editor.reverse()
 
-dfs(1, num_data[0], op_data[0], op_data[1], op_data[2], op_data[3])
-
-print(max_result)
-print(min_result)
+print(''.join(main_editor) + ''.join(side_editor))
