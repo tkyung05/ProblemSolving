@@ -1,24 +1,47 @@
 import sys
 input = sys.stdin.readline
 
-main_editor = list(map(str, input().strip('\n')))
-n = int(input())
+string = list(map(str, input().strip('\n')))
 
-side_editor = []
+tag = False
+word_trig = False
 
-for _ in range(n):
-    cmd = list(map(str, input().split()))
+result = []
+word = []
 
-    if cmd[0] == 'P':
-        main_editor.append(cmd[1])
-    elif cmd[0] == 'L' and main_editor:
-        side_editor.append(main_editor.pop())
-    elif cmd[0] == 'D' and side_editor:
-        main_editor.append(side_editor.pop())
-    elif cmd[0] == 'B' and main_editor:
-        main_editor.pop()
+for i in range(len(string)):
+    if string[i] == '>':
+        tag = False
+        result.append(string[i])
+        continue
 
-if side_editor:
-    side_editor.reverse()
+    if tag:
+        result.append(string[i])
+        continue
+    
+    if string[i] == '<':
+        if word_trig:
+            for _ in range(len(word)):
+                result.append(word.pop())
+            word_trig = False
+        tag = True
+        result.append(string[i])
+        continue
 
-print(''.join(main_editor) + ''.join(side_editor))
+    if i == len(string) - 1 and word_trig:
+        word.append(string[i])
+        for _ in range(len(word)):
+            result.append(word.pop())
+        continue
+
+    if string[i] == ' ' and word_trig:
+        for _ in range(len(word)):
+            result.append(word.pop())
+        result.append(string[i])
+        word_trig = False
+        continue
+
+    word.append(string[i])
+    word_trig = True
+
+print(''.join(result))
