@@ -1,47 +1,43 @@
 import sys
 input = sys.stdin.readline
 
-string = list(map(str, input().strip('\n')))
+n = int(input())
+data = list(map(str, input().strip('\n')))
 
-tag = False
-word_trig = False
+eng = {}
+for i in range(n): eng[chr(65+i)] = float(input())
 
-result = []
-word = []
+postfix = []
+for v in data:
+    if v == '*' or v == '/' or v == '-' or v == '+': postfix.append(v)
+    else: postfix.append(eng[v])
 
-for i in range(len(string)):
-    if string[i] == '>':
-        tag = False
-        result.append(string[i])
-        continue
+stack = []
 
-    if tag:
-        result.append(string[i])
-        continue
-    
-    if string[i] == '<':
-        if word_trig:
-            for _ in range(len(word)):
-                result.append(word.pop())
-            word_trig = False
-        tag = True
-        result.append(string[i])
-        continue
+for x in postfix:
+    if x == '*':
+        f = stack.pop()
+        s = stack.pop()
+        
+        stack.append(s * f)
+    elif x == '/':
+        f = stack.pop()
+        s = stack.pop()
+        
+        stack.append(s / f)
+    elif x == '+':
+        f = stack.pop()
+        s = stack.pop()
+        
+        stack.append(s + f)
+    elif x == '-':
+        f = stack.pop()
+        s = stack.pop()
+        
+        stack.append(s - f)
+        
+    else:   
+        stack.append(float(x))
 
-    if i == len(string) - 1 and word_trig:
-        word.append(string[i])
-        for _ in range(len(word)):
-            result.append(word.pop())
-        continue
-
-    if string[i] == ' ' and word_trig:
-        for _ in range(len(word)):
-            result.append(word.pop())
-        result.append(string[i])
-        word_trig = False
-        continue
-
-    word.append(string[i])
-    word_trig = True
-
-print(''.join(result))
+result = stack.pop()
+print(f'{result:.2f}')
