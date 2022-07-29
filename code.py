@@ -1,13 +1,18 @@
-from math import gcd
 import sys
+from collections import Counter
 input = sys.stdin.readline
 
-n, s = map(int, input().split())
+n = int(input())
 data = list(map(int, input().split()))
 
-result = abs(s - data[0])
+count_data = Counter(data)
+result = [-1] * n
 
-for i in range(1, n):
-    result = gcd(abs(s - data[i]), result)
+stack = []
+for i in range(n):
+    while stack and stack[-1][0] < count_data[data[i]]:
+        result[stack.pop()[1]] = data[i]
 
-print(result)
+    stack.append((count_data[data[i]], i))
+
+print(' '.join(list(map(str,result))))
