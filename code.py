@@ -1,43 +1,13 @@
+from math import gcd
 import sys
 input = sys.stdin.readline
 
-n = int(input())
-data = list(map(str, input().strip('\n')))
+n, s = map(int, input().split())
+data = list(map(int, input().split()))
 
-eng = {}
-for i in range(n): eng[chr(65+i)] = float(input())
+result = abs(s - data[0])
 
-postfix = []
-for v in data:
-    if v == '*' or v == '/' or v == '-' or v == '+': postfix.append(v)
-    else: postfix.append(eng[v])
+for i in range(1, n):
+    result = gcd(abs(s - data[i]), result)
 
-stack = []
-
-for x in postfix:
-    if x == '*':
-        f = stack.pop()
-        s = stack.pop()
-        
-        stack.append(s * f)
-    elif x == '/':
-        f = stack.pop()
-        s = stack.pop()
-        
-        stack.append(s / f)
-    elif x == '+':
-        f = stack.pop()
-        s = stack.pop()
-        
-        stack.append(s + f)
-    elif x == '-':
-        f = stack.pop()
-        s = stack.pop()
-        
-        stack.append(s - f)
-        
-    else:   
-        stack.append(float(x))
-
-result = stack.pop()
-print(f'{result:.2f}')
+print(result)
