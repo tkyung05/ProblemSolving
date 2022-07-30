@@ -1,18 +1,21 @@
 import sys
-from collections import Counter
 input = sys.stdin.readline
 
-n = int(input())
-data = list(map(int, input().split()))
+n, m = map(int, input().split())
+result = []
 
-count_data = Counter(data)
-result = [-1] * n
+overlap_data = {}
+for _ in range(n):
+    overlap_data[str(input().strip('\n'))] = 1
 
-stack = []
-for i in range(n):
-    while stack and stack[-1][0] < count_data[data[i]]:
-        result[stack.pop()[1]] = data[i]
+for _ in range(m):
+    i = str(input().strip('\n'))
+    if i in overlap_data:
+        result.append(i)
 
-    stack.append((count_data[data[i]], i))
+result.sort()
 
-print(' '.join(list(map(str,result))))
+print(len(result))
+for i in result:
+    print(i)
+        
