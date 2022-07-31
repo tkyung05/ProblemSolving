@@ -1,15 +1,18 @@
 import sys
 input = sys.stdin.readline
 
-n = int(input())
+T = int(input())
 
-limit = 1000
-dp = [0] * (limit + 1)
+limit = 11
 
-dp[1], dp[2] = 1, 3
+for _ in range(T):
+    n = int(input())
 
-for i in range(3, limit + 1):
-    dp[i] = dp[i - 1] + dp[i - 2] * 2
+    dp = [0] * (limit + 1)
+    dp[1], dp[2], dp[3] = 1, 2, 4
 
-print(dp[n] % 10007)
-
+    for i in range(4, n + 1):
+        dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3]
+    
+    print(dp[n])
+    
