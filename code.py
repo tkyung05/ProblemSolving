@@ -1,21 +1,15 @@
 import sys
 input = sys.stdin.readline
 
-n, m = map(int, input().split())
-result = []
+n = int(input())
 
-overlap_data = {}
-for _ in range(n):
-    overlap_data[str(input().strip('\n'))] = 1
+limit = 1000
+dp = [0] * (limit + 1)
 
-for _ in range(m):
-    i = str(input().strip('\n'))
-    if i in overlap_data:
-        result.append(i)
+dp[1], dp[2] = 1, 2
 
-result.sort()
+for i in range(3, limit + 1):
+    dp[i] = dp[i - 1] + dp[i - 2]
 
-print(len(result))
-for i in result:
-    print(i)
-        
+print(dp[n] % 10007)
+
