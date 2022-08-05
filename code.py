@@ -1,17 +1,23 @@
 import sys
 input = sys.stdin.readline
 
-n = int(input())
+T = int(input())
 
-dp = [[0] * 10 for _ in range(n + 1)]
+for _ in range(T):
+    n = int(input())
 
-for i in range(10): dp[1][i] = 1 
+    dp = []
+    for _ in range(2): dp.append([0] + list(map(int, input().split())))
 
-div_num = 10007
+    if n == 1:
+        print(max(dp[0][1], dp[1][1]))
+        continue
 
-for i in range(2, n + 1):
-    for j in range(10):
-        for k in range(j, 10):
-            dp[i][j] += dp[i - 1][k] 
+    dp[0][2] += dp[1][1]
+    dp[1][2] += dp[0][1] 
 
-print(sum(dp[n]) % div_num)
+    for i in range(3, n + 1):
+        dp[0][i] += max(dp[1][i - 1], dp[1][i - 2]) 
+        dp[1][i] += max(dp[0][i - 1], dp[0][i - 2])
+
+    print(max(dp[0][n], dp[1][n]))
