@@ -1,23 +1,22 @@
 import sys
 input = sys.stdin.readline
 
-T = int(input())
+n = int(input())
 
-for _ in range(T):
-    n = int(input())
+data = [0]
+for _ in range(n): data.append(int(input()))
 
-    dp = []
-    for _ in range(2): dp.append([0] + list(map(int, input().split())))
+if n < 3:
+    print(sum(data))
+    exit(0)
 
-    if n == 1:
-        print(max(dp[0][1], dp[1][1]))
-        continue
+dp = [0] * (n + 1)
 
-    dp[0][2] += dp[1][1]
-    dp[1][2] += dp[0][1] 
+dp[1] = data[1]
+dp[2] = data[1] + data[2]
+dp[3] = max(data[3] + data[1], data[3] + data[2], dp[2])
 
-    for i in range(3, n + 1):
-        dp[0][i] += max(dp[1][i - 1], dp[1][i - 2]) 
-        dp[1][i] += max(dp[0][i - 1], dp[0][i - 2])
+for i in range(4, n + 1):
+    dp[i] = max(dp[i - 1], data[i] + data[i - 1] + dp[i - 3], data[i] + dp[i - 2])
 
-    print(max(dp[0][n], dp[1][n]))
+print(dp[-1])
