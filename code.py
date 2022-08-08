@@ -1,13 +1,43 @@
 import sys
 input = sys.stdin.readline
 
-n = int(input())
+N = int(input())
 
-dp = [0] * (n + 1)
+paper = [list(map(int, input().split())) for _ in range(N)]
 
-for i in range(1, n + 1):
-    dp[i] = i
-    for j in range(1, int(i ** 0.5) + 1):
-       dp[i] = min(dp[i], dp[i - j * j] + 1) 
+result = []
+
+def cut_paper(y, x, n):
+
+    color = paper[y][x]
     
-print(dp[n])
+    for i in range(y, y + n):
+        for j in range(x, x + n):
+            if color != paper[i][j]:
+
+                cut_size = n // 3
+                cut_paper(y, x, cut_size)
+                
+                cut_paper(y + cut_size, x, cut_size)
+                cut_paper(y + cut_size * 2, x, cut_size)
+                
+                cut_paper(y, x + cut_size, cut_size)
+                cut_paper(y, x + cut_size * 2, cut_size)
+               
+                cut_paper(y + cut_size, x + cut_size, cut_size) 
+                cut_paper(y + cut_size, x + cut_size * 2, cut_size)
+                
+                cut_paper(y + cut_size * 2, x + cut_size, cut_size)
+                cut_paper(y + cut_size * 2, x + cut_size * 2 , cut_size)
+
+                return
+    
+    result.append(color)
+
+         
+        
+cut_paper(0, 0, N)
+
+print(result.count(-1))
+print(result.count(0))
+print(result.count(1))
