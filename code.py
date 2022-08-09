@@ -1,43 +1,24 @@
 import sys
 input = sys.stdin.readline
 
-N = int(input())
-
-paper = [list(map(int, input().split())) for _ in range(N)]
+n = int(input())
 
 result = []
+visited = [False] * n
 
-def cut_paper(y, x, n):
+def dfs(depth):
+    if depth == n:
+        print(' '.join(list(map(str, result))))
+        return
 
-    color = paper[y][x]
+    for i in range(n):
+        if not visited[i]:
+            visited[i] = True
+            result.append(i + 1)
+            
+            dfs(depth + 1)
+            
+            visited[i] = False
+            result.pop()
     
-    for i in range(y, y + n):
-        for j in range(x, x + n):
-            if color != paper[i][j]:
-
-                cut_size = n // 3
-                cut_paper(y, x, cut_size)
-                
-                cut_paper(y + cut_size, x, cut_size)
-                cut_paper(y + cut_size * 2, x, cut_size)
-                
-                cut_paper(y, x + cut_size, cut_size)
-                cut_paper(y, x + cut_size * 2, cut_size)
-               
-                cut_paper(y + cut_size, x + cut_size, cut_size) 
-                cut_paper(y + cut_size, x + cut_size * 2, cut_size)
-                
-                cut_paper(y + cut_size * 2, x + cut_size, cut_size)
-                cut_paper(y + cut_size * 2, x + cut_size * 2 , cut_size)
-
-                return
-    
-    result.append(color)
-
-         
-        
-cut_paper(0, 0, N)
-
-print(result.count(-1))
-print(result.count(0))
-print(result.count(1))
+dfs(0)
