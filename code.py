@@ -2,35 +2,65 @@ import sys
 input = sys.stdin.readline
 
 n = int(input())
-num = list(map(int, input().split()))
-oper_count = list(map(int, input().split()))
+graph = [list(map(str, input().split())) for _ in range(n)]
 
-min_result = int(1e9)
-max_result = int(-1e9)
-
+visited = [[False] * n for _ in range(n)]
 sequence = []
+teacher = []
 
-overlap_oper = {}
+for i in range(n):
+    for j in range(n):
+        if graph[i][j] == 'T':
+            teacher.append((i, j))
+            visited[i][j] = True
+        elif graph[i][j] == 'S':
+            visited[i][j] = True
 
-def dfs(depth, plus, minus, mult, div, total):
-    global max_result, min_result
-    
-    if depth == (n - 1):
-        max_result = max(max_result, total)
-        min_result = min(min_result, total) 
+dy = [1, -1, 0, 0]
+dx = [0, 0, -1, 1]
+
+def check():
+    for y, x in teacher:
+        for i in range(4):
+            
+            for j in range(n):
+                if i == 0 or i == 1:
+                    ny = dy[i] + (j * dy[i])
+                    nx = 0
+                elif i == 2 or i == 3:
+                    nx = dx[i] + (j * dx[i])
+                    ny = 0
+                
+                cy, cx = y + ny, x + nx
+                if cy < 0 or cy >= n or cx < 0 or cx >= n:
+                    break
+
+                if graph[cy][cx] == 'O':
+                    break
+                if graph[cy][cx] == 'S':
+                    return False
+    return True
+
+
+def dfs(depth, idx):
+
+    if depth == 3:
+        if check():
+            print('YES')
+            exit(0)
         return
+    
+    for i in range(idx, n):
+        for j in range(n):
+            if not visited[i][j]:
+                visited[i][j] = True
+                graph[i][j] = 'O'
 
-    if plus > 0:
-        dfs(depth + 1, plus - 1, minus, mult, div, total + num[depth + 1])
-    if minus > 0:
-        dfs(depth + 1, plus, minus - 1, mult, div, total - num[depth + 1])
-    if mult > 0:
-        dfs(depth + 1, plus, minus, mult - 1, div, total * num[depth + 1])
-    if div > 0:
-        dfs(depth + 1, plus, minus, mult, div - 1, int(total // num[depth + 1]))
+                dfs(depth + 1, i)
 
+                visited[i][j] = False
+                graph[i][j] = 'X'
 
-dfs(0, oper_count[0], oper_count[1], oper_count[2], oper_count[3], num[0])
+dfs(0, 0)
 
-print(max_result)
-print(min_result)
+print('NO')
