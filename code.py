@@ -1,55 +1,46 @@
 import sys
 input = sys.stdin.readline
 
-N = int(input())
-nutrient = list(map(int, input().split()))
+L, C = map(int, input().split())
+alpa = sorted(list(map(str, input().split())))
 
-graph = [list(map(int, input().split())) for _ in range(N)]
-
-visited = [False] * N
 sequence = []
+visited = [False] * C
 
-min_price = int(1e9)
-min_set = []
+vowel = {}
+consonant = {}
+
+for i in range(26):
+    ap = chr(97 + i)
+    if ap == 'a' or ap == 'e' or ap == 'i' or ap == 'o' or ap == 'u':
+        vowel[ap] = True
+    else: 
+        consonant[ap] = True
+
 
 def dfs(depth, idx):
-    global min_price, min_set
-    
-    if depth >= 1:
 
-        data = [0] * 5
-        for i in sequence:
-            for j in range(5):
-                data[j] += graph[i][j]
-
-        bug = False
-        for i in range(4):
-            if nutrient[i] > data[i]:
-                bug = True
-                break
+    if depth == L:
+        flag1, flag2 = False, 0
         
-        if not bug and min_price > data[4]:
-            min_price = data[4]
-            min_set = list(map(int, sequence))
-            for i in range(depth): min_set[i] += 1
+        for i in sequence:
+            if i in vowel: flag1 = True
+            elif i in consonant: flag2 += 1
 
-        if depth == N:
-            return 
+        if flag1 and flag2 > 1:
+            print(''.join(sequence))
+            
+        return
 
-    for i in range(idx, N):
+    for i in range(idx, C):
         if not visited[i]:
             visited[i] = True
-            sequence.append(i)
+            sequence.append(alpa[i])
 
             dfs(depth + 1, i)
 
             visited[i] = False
             sequence.pop()
 
-dfs(0, 0)
 
-if min_price == int(1e9):
-    print(-1)
-else:
-    print(min_price)
-    print(' '.join(list(map(str, min_set))))
+dfs(0, 0)
