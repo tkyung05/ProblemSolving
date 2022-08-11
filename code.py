@@ -1,28 +1,45 @@
 import sys
 input = sys.stdin.readline
 
-N, L, R, X = map(int, input().split())
-score = list(map(int, input().split()))
+N = int(input())
+nutrient = list(map(int, input().split()))
 
-count = 0
+graph = [list(map(int, input().split())) for _ in range(N)]
 
-sequence = []
 visited = [False] * N
+sequence = []
+
+min_price = int(1e9)
+min_set = []
 
 def dfs(depth, idx):
-    global count
+    global min_price, min_set
     
-    if depth >= 2:
-        if L <= sum(sequence) <= R and X <= abs(max(sequence) - min(sequence)):
-            count += 1
+    if depth >= 1:
+
+        data = [0] * 5
+        for i in sequence:
+            for j in range(5):
+                data[j] += graph[i][j]
+
+        bug = False
+        for i in range(4):
+            if nutrient[i] > data[i]:
+                bug = True
+                break
         
+        if not bug and min_price > data[4]:
+            min_price = data[4]
+            min_set = list(map(int, sequence))
+            for i in range(depth): min_set[i] += 1
+
         if depth == N:
-            return
+            return 
 
     for i in range(idx, N):
         if not visited[i]:
             visited[i] = True
-            sequence.append(score[i])
+            sequence.append(i)
 
             dfs(depth + 1, i)
 
@@ -30,4 +47,9 @@ def dfs(depth, idx):
             sequence.pop()
 
 dfs(0, 0)
-print(count)
+
+if min_price == int(1e9):
+    print(-1)
+else:
+    print(min_price)
+    print(' '.join(list(map(str, min_set))))
