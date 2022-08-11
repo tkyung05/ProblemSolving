@@ -1,46 +1,22 @@
 import sys
 input = sys.stdin.readline
 
-L, C = map(int, input().split())
-alpa = sorted(list(map(str, input().split())))
+n, m = map(int, input().split())
+dp = [list(map(int, input().split())) for _ in range(n)]
 
-sequence = []
-visited = [False] * C
+dy = [-1, 0, -1]
+dx = [0, -1, -1]
 
-vowel = {}
-consonant = {}
+for i in range(n):
+    for j in range(m):
+        candy_hold = [0] * 3
 
-for i in range(26):
-    ap = chr(97 + i)
-    if ap == 'a' or ap == 'e' or ap == 'i' or ap == 'o' or ap == 'u':
-        vowel[ap] = True
-    else: 
-        consonant[ap] = True
-
-
-def dfs(depth, idx):
-
-    if depth == L:
-        flag1, flag2 = False, 0
-        
-        for i in sequence:
-            if i in vowel: flag1 = True
-            elif i in consonant: flag2 += 1
-
-        if flag1 and flag2 > 1:
-            print(''.join(sequence))
+        for k in range(3):
+            ny, nx = i + dy[k], j + dx[k]
+            if ny < 0 or ny >= n or nx < 0 or nx >= m:
+                continue
+            candy_hold[k] = dp[ny][nx]
             
-        return
+        dp[i][j] += max(candy_hold)
 
-    for i in range(idx, C):
-        if not visited[i]:
-            visited[i] = True
-            sequence.append(alpa[i])
-
-            dfs(depth + 1, i)
-
-            visited[i] = False
-            sequence.pop()
-
-
-dfs(0, 0)
+print(dp[n-1][m-1])
