@@ -1,45 +1,33 @@
 import sys
 input = sys.stdin.readline
 
-T = int(input())
+N, L, R, X = map(int, input().split())
+score = list(map(int, input().split()))
 
-operator = [' ', '+', '-']
+count = 0
+
 sequence = []
+visited = [False] * N
 
-def dfs(depth):
-
-    if depth == n - 1:
-        total = ['1']
-        result = ['1']
+def dfs(depth, idx):
+    global count
+    
+    if depth >= 2:
+        if L <= sum(sequence) <= R and X <= abs(max(sequence) - min(sequence)):
+            count += 1
         
-        for i in range(n - 1):
-            now_num = str(i + 2)
+        if depth == N:
+            return
 
-            if sequence[i] == ' ':
-                total[-1] = str(total[-1] + now_num)
-                result.append(' ')
-            elif sequence[i] == '+':
-                total.append(now_num)
-                result.append('+')
-            elif sequence[i] == '-':
-                total.append(str('-' + now_num)) 
-                result.append('-')
-            
-            result.append(now_num)
+    for i in range(idx, N):
+        if not visited[i]:
+            visited[i] = True
+            sequence.append(score[i])
 
-        if sum(list(map(int, total))) == 0:
-            print(''.join(result))
-            
-        return 
+            dfs(depth + 1, i)
 
-    for i in operator:
-        sequence.append(i)
-        dfs(depth + 1)
-        sequence.pop()
+            visited[i] = False
+            sequence.pop()
 
-
-for _ in range(T):
-    n = int(input())
-
-    dfs(0)
-    print()
+dfs(0, 0)
+print(count)
