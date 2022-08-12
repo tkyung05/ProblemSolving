@@ -1,52 +1,45 @@
 import sys
 input = sys.stdin.readline
 
-n, m = map(int, input().split())
-graph = [list(map(int, input().split())) for _ in range(n)]
+graph = [list(map(int, input().split())) for _ in range(9)]
 
-chicken = []
-house = []
+blank = []
+for i in range(9):
+    for j in range(9):
+        if graph[i][j] == 0: blank.append((i, j))
 
-for i in range(n):
-    for j in range(n):
-        if graph[i][j] == 2:
-            chicken.append((i, j))
-        elif graph[i][j] == 1:
-            house.append((i, j))
 
-sequence = []
-visited = [False] * len(chicken)
+def possible(y, x):
+    possible_nums = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-result = int(1e9)
+    sy, sx = (y // 3) * 3, (x // 3) * 3
+    for i in range(sy, sy + 3):
+        for j in range(sx, sx + 3):
+            if graph[i][j] in possible_nums:
+                possible_nums.remove(graph[i][j])
+    
+    for i in range(9):
+        if graph[i][x] in possible_nums: 
+            possible_nums.remove(graph[i][x])
+        if graph[y][i] in possible_nums: 
+            possible_nums.remove(graph[y][i])
 
-def dfs(depth, idx):
-    global result
+    return possible_nums
 
-    if depth == m:
-        dis_ch_house = [100] * len(house)
 
-        for i in sequence:
-            ch_y, ch_x = chicken[i][0], chicken[i][1]
+def dfs(depth):
 
-            for j in range(len(house)):
-                hs_y, hs_x = house[j][0], house[j][1]
-                
-                new_dis = abs(hs_y - ch_y) + abs(hs_x - ch_x)
+    if depth == len(blank):
+        for i in range(9): print(*graph[i])
+        exit(0)
 
-                dis_ch_house[j] = min(dis_ch_house[j], new_dis)
-        
-        result = min(result, sum(dis_ch_house))
-        return 
+    
+    blank_y, blank_x = blank[depth][0], blank[depth][1] 
+    possible_list = possible(blank_y, blank_x)
 
-    for i in range(idx, len(chicken)):
-        if not visited[i]:
-            visited[i] = True
-            sequence.append(i)
+    for i in possible_list:
+        graph[blank_y][blank_x] = i
+        dfs(depth + 1)
+        graph[blank_y][blank_x] = 0
 
-            dfs(depth + 1, i)
-
-            visited[i] = False
-            sequence.pop()
-
-dfs(0, 0)
-print(result)
+dfs(0)
