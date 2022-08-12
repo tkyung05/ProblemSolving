@@ -1,45 +1,56 @@
+from collections import deque
 import sys
 input = sys.stdin.readline
 
-graph = [list(map(int, input().split())) for _ in range(9)]
+N, M, T = map(int, input().split())
 
-blank = []
-for i in range(9):
-    for j in range(9):
-        if graph[i][j] == 0: blank.append((i, j))
+graph = [list(map(int, input().split())) for _ in range(N)]
+
+visited = [[[0, 0] for _ in range(M)] for _ in range(N)]
+
+dy = [-1, 1, 0, 0]
+dx = [0, 0, -1, 1]
+
+def bfs():
+    q = deque([(0, 0, 0)])
+    visited[0][0][0] = 1
+
+    while q:
+        y, x, h = q.popleft()
+
+        if y == N - 1 and x == M - 1:
+            f, s = int(1e9), int(1e9)
+
+            if visited[y][x][0] != 0 and visited[y][x][0] - 1 <= T:
+                f = visited[y][x][0] - 1
+
+            if visited[y][x][1] != 0 and visited[y][x][1] - 1 <= T:
+                s = visited[y][x][1] - 1
+            
+            result = min(f, s)
+            if result == int(1e9):
+                return 'Fail'
+            
+            return result
+
+        for i in range(4):
+            ny, nx = y + dy[i], x + dx[i]
+            if ny < 0 or ny >= N or nx < 0 or nx >= M:
+                continue
+            
+            if h == 1 and visited[ny][nx][1] == 0:
+                visited[ny][nx][1] = visited[y][x][1] + 1
+                q.append((ny, nx, 1))
+            
+            if h == 0 and graph[ny][nx] == 0 and visited[ny][nx][0] == 0:
+                visited[ny][nx][0] = visited[y][x][0] + 1
+                q.append((ny, nx, 0))
+
+            if h == 0 and graph[ny][nx] == 2 and visited[ny][nx][0] == 0:
+                visited[ny][nx][1] = visited[y][x][0] + 1
+                q.append((ny, nx, 1))
+            
+    return 'Fail'
 
 
-def possible(y, x):
-    possible_nums = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-    sy, sx = (y // 3) * 3, (x // 3) * 3
-    for i in range(sy, sy + 3):
-        for j in range(sx, sx + 3):
-            if graph[i][j] in possible_nums:
-                possible_nums.remove(graph[i][j])
-    
-    for i in range(9):
-        if graph[i][x] in possible_nums: 
-            possible_nums.remove(graph[i][x])
-        if graph[y][i] in possible_nums: 
-            possible_nums.remove(graph[y][i])
-
-    return possible_nums
-
-
-def dfs(depth):
-
-    if depth == len(blank):
-        for i in range(9): print(*graph[i])
-        exit(0)
-
-    
-    blank_y, blank_x = blank[depth][0], blank[depth][1] 
-    possible_list = possible(blank_y, blank_x)
-
-    for i in possible_list:
-        graph[blank_y][blank_x] = i
-        dfs(depth + 1)
-        graph[blank_y][blank_x] = 0
-
-dfs(0)
+print(bfs())
