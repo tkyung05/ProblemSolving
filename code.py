@@ -1,31 +1,39 @@
+from collections import deque
 import sys
 input = sys.stdin.readline
 
-r, c = map(int, input().split())
-graph = [list(map(str, input().strip('\n'))) for _ in range(r)]
+T = int(input())
 
-visit_alpa = []
+for _ in range(T):
+    cmd = list(map(str, input().strip('\n')))
+    n = int(input())
+    data = deque(list(map(str, input().split(','))))
 
-dy = [-1, 1, 0, 0]
-dx = [0, 0, -1, 1]
-
-result = 1
-
-def dfs(y, x, depth):
-    global result
-
-    visit_alpa.append(graph[y][x])
-
-    result = max(result, depth)
+    if n > 0: 
+        data[0] = data[0].strip('[')
+        data[-1] = data[-1].strip(']\n')
+    else:
+        data = deque()
     
-    for i in range(4):
-        ny, nx = y + dy[i], x + dx[i]
-        if ny < 0 or ny >= r or nx < 0 or nx >= c:
-            continue
-        
-        if graph[ny][nx] not in visit_alpa:
-            dfs(ny, nx, depth + 1)
-            visit_alpa.pop()
+    direction = True # True = 오른쪽, False = 왼쪽
+    bug = False
 
-dfs(0, 0, 1)
-print(result)
+    for cm in cmd:
+        if cm == 'R':
+            if direction: direction = False
+            else: direction = True
+        
+        elif cm == 'D':
+            if len(data) == 0:
+                print('error')
+                bug = True
+                break
+
+            if direction: data.popleft()
+            else: data.pop()
+    
+    if bug: continue
+
+    if not direction: data.reverse()
+    
+    print('[' + ','.join(data) + ']')
