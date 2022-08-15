@@ -1,42 +1,30 @@
+from collections import deque
 import sys
 input = sys.stdin.readline
 
-n, m, k = map(int, input().split()) 
-graph = [list(map(int, input().split())) for _ in range(n)]
+T = int(input())
 
-visited = [[False] * m for _ in range(n)]
-result = int(-1e9)
+for _ in range(T):
+    n, m = map(int, input().split())
+    queue = deque(list(map(int, input().split())))
 
-dy = [-1, 1, 0, 0]
-dx = [0, 0, -1, 1]
-
-def dfs(depth, total, py, px):
-    global result
-
-    if depth == k:
-        result = max(result, total)
-        return
-
-    for i in range(py, n):
-        for j in range(px if i == py else 0, m):
-
-            if not visited[i][j]:    
-                visit_memo = []
-                visited[i][j] = True
-
-                for d in range(4):
-                    ny, nx = i + dy[d], j + dx[d]
-                    if ny < 0 or ny >= n or nx < 0 or nx >= m:
-                        continue
-                    if not visited[ny][nx]: 
-                        visited[ny][nx] = True
-                        visit_memo.append((ny, nx))
-                
-                dfs(depth + 1, total + graph[i][j], i, j)
-
-                visited[i][j] = False
-                for y, x in visit_memo:
-                    visited[y][x] = False
-
-dfs(0, 0, 0, 0)
-print(result)
+    for i in range(n): queue[i] = (i, queue[i])
+    
+    count = 1
+    while True:
+        idx, num = queue.popleft()
+            
+        bug = False
+        for i in range(len(queue)):
+            if num < queue[i][1]:
+                bug = True
+                break
+        
+        if bug: 
+            queue.append((idx, num))
+        else:
+            if idx == m: 
+                print(count)
+                break
+            count += 1
+    
