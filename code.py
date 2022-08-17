@@ -1,21 +1,33 @@
 import sys
 input = sys.stdin.readline
 
-n, k = map(int, input().split())
-graph = list(map(str, input().strip('\n')))
+n = int(input())
+data = [tuple(map(int, input().split())) for _ in range(n)]
 
+sequence = []
 visited = [False] * n
-result = 0
 
-for i in range(n):
-    if graph[i] == 'P':
-        start = i - k if i - k > 0 else 0
-        end = i + k if i + k <= n - 1 else n - 1
+result = int(1e9)
+
+def dfs(depth, idx):
+    global result
+    
+    if depth != 0:
+        sour, bitter = data[sequence[0]][0], data[sequence[0]][1]
+
+        for i in range(1, depth):
+            sour *= data[sequence[i]][0]
+            bitter += data[sequence[i]][1]
+
+        result = min(result, abs(sour - bitter))
         
-        for j in range(start, end + 1):
-            if graph[j] == 'H' and not visited[j]:
-                visited[j] = True
-                result += 1
-                break
+        if depth == n:
+            return
+    
+    for i in range(idx, n):
+        sequence.append(i)
+        dfs(depth + 1, i + 1)
+        sequence.pop()
 
+dfs(0, 0)
 print(result)
