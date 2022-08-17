@@ -1,48 +1,34 @@
+from collections import deque
 import sys
 input = sys.stdin.readline
 
 n = int(input())
-graph = [list(map(int, input().split())) for _ in range(n)]
 
-comb = []
-visited = [False] * n
-result = int(1e9)
+emoji = [[0 for _ in range(n)] for _ in range(n + 1)]
 
-def dfs(depth, idx, team_size):
-    global result
-
-    if depth == team_size:
-        link, start = 0, 0
-
-        start_list = []
-        for i in range(n):
-            if not visited[i]:
-                start_list.append(i)
+def bfs():
+    q = deque([(1, 0)])
+    emoji[1][0] = 1
+     
+    while q:
+        screen, clip = q.popleft()
         
-        for i in range(team_size):
-            for j in range(i, team_size):
-                link += graph[comb[i]][comb[j]] + graph[comb[j]][comb[i]]
+        if screen == n:
+            result = int(1e9)
+            for i in emoji[n]:
+                if i != 0: result = min(result, i)
+            return result - 1
+
+        if emoji[screen][screen] == 0:
+            emoji[screen][screen] = emoji[screen][clip] + 1
+            q.append((screen, screen))
         
-        for i in range(len(start_list)):
-            for j in range(i, len(start_list)):
-                start += graph[start_list[i]][start_list[j]] + graph[start_list[j]][start_list[i]]
+        if clip != 0 and (screen + clip) <= n and emoji[screen + clip][clip] == 0:
+            emoji[screen + clip][clip] = emoji[screen][clip] + 1
+            q.append((screen + clip, clip))
         
-        result = min(result, abs(link - start))
-        return
-
-    for i in range(idx, n):
-        visited[i] = True
-        comb.append(i)
-
-        dfs(depth + 1, i + 1, team_size)
+        if (screen - 1) > 1 and emoji[screen - 1][clip] == 0:
+            emoji[screen - 1][clip] = emoji[screen][clip] + 1
+            q.append((screen - 1, clip))
         
-        visited[i] = False
-        comb.pop()
-
-
-for i in range(2, int(n//2) + 1):
-    dfs(0, 0, i)
-    if result == 0:
-        break
-
-print(result)
+print(bfs())
