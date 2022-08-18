@@ -1,21 +1,58 @@
 import sys
 input = sys.stdin.readline
 
-n, m = map(int, input().split())
-graph = [list(map(int, input().strip('\n'))) for _ in range(n)]
+bingo = [list(map(int, input().split())) for _ in range(5)]
+ans = [list(map(int, input().split())) for _ in range(5)]\
 
+visited = [[0] * 5 for _ in range(5)]
 result = 1
 
-def check(size):
-    global result
+def check():
+    count = 0
+    rows = [0] * 5
+    left_cross, right_cross = 0, 0
 
-    for y in range((n - size) + 1):
-        for x in range((m - size) + 1):
-            if graph[y][x] == graph[y][x + (size - 1)] == graph[y + (size - 1)][x] == graph[y + (size - 1)][x + (size - 1)]:
-                result = size
-                return
+    for i in range(5):
+        if sum(visited[i]) == 5:
+            count += 1
+        if visited[i][i] == 1:
+            left_cross += 1
+        if visited[i][4 - i] == 1:
+            right_cross += 1
+        
+        for j in range(5):
+            if visited[i][j] == 1:
+                rows[j] += 1 
+    
+    if left_cross == 5:
+        count += 1
+    if right_cross == 5:
+        count += 1
+    for i in range(5):
+        if rows[i] == 5: count += 1
+    
+    if count >= 3:
+        return True
+    else:
+        return False
 
-for size in range(2, min(n, m) + 1):
-    check(size)
 
-print(result ** 2)
+found_ans = False
+
+for nums in ans:
+    if found_ans: break
+    for num in nums:
+
+        for i in range(5):
+            for j in range(5):
+                if bingo[i][j] == num:
+                    visited[i][j] = 1
+        
+        if check(): 
+            found_ans = True
+            break
+
+        result += 1
+
+print(result)
+
