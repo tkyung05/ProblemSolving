@@ -1,35 +1,21 @@
 import sys
 input = sys.stdin.readline
 
-n = int(input())
+n, m = map(int, input().split())
+graph = [list(map(int, input().strip('\n'))) for _ in range(n)]
 
-while True:
-    if n == 1:
-        n += 1
-        continue
+result = 1
 
-    num = list(str(n))
-    left, right = 0, len(num) - 1
-        
-    isFalin = True
-    isPrime = True
+def check(size):
+    global result
 
-    while left < right:
-        if num[left] != num[right]:
-            isFalin = False
-            break
-        left += 1
-        right -= 1
+    for y in range((n - size) + 1):
+        for x in range((m - size) + 1):
+            if graph[y][x] == graph[y][x + (size - 1)] == graph[y + (size - 1)][x] == graph[y + (size - 1)][x + (size - 1)]:
+                result = size
+                return
 
-    if isFalin:
-        for i in range(2, int(n ** 0.5) + 1):
-            if n % i == 0: 
-                isPrime = False
-                break
-    
-    if isPrime and isFalin:
-        print(n)
-        break
+for size in range(2, min(n, m) + 1):
+    check(size)
 
-    n += 1
-
+print(result ** 2)
