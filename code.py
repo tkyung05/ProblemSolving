@@ -2,32 +2,34 @@ import sys
 input = sys.stdin.readline
 
 n = int(input())
-data = [tuple(map(int, input().split())) for _ in range(n)]
 
-sequence = []
-visited = [False] * n
+while True:
+    if n == 1:
+        n += 1
+        continue
 
-result = int(1e9)
-
-def dfs(depth, idx):
-    global result
-    
-    if depth != 0:
-        sour, bitter = data[sequence[0]][0], data[sequence[0]][1]
-
-        for i in range(1, depth):
-            sour *= data[sequence[i]][0]
-            bitter += data[sequence[i]][1]
-
-        result = min(result, abs(sour - bitter))
+    num = list(str(n))
+    left, right = 0, len(num) - 1
         
-        if depth == n:
-            return
-    
-    for i in range(idx, n):
-        sequence.append(i)
-        dfs(depth + 1, i + 1)
-        sequence.pop()
+    isFalin = True
+    isPrime = True
 
-dfs(0, 0)
-print(result)
+    while left < right:
+        if num[left] != num[right]:
+            isFalin = False
+            break
+        left += 1
+        right -= 1
+
+    if isFalin:
+        for i in range(2, int(n ** 0.5) + 1):
+            if n % i == 0: 
+                isPrime = False
+                break
+    
+    if isPrime and isFalin:
+        print(n)
+        break
+
+    n += 1
+
