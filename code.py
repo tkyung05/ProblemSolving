@@ -1,58 +1,42 @@
 import sys
 input = sys.stdin.readline
 
-bingo = [list(map(int, input().split())) for _ in range(5)]
-ans = [list(map(int, input().split())) for _ in range(5)]\
+king, stone, n = map(str, input().split())
 
-visited = [[0] * 5 for _ in range(5)]
-result = 1
+move = {}
+move['R'] = (0, 1)
+move['L'] = (0, -1)
+move['B'] = (-1, 0)
+move['T'] = (1, 0)
+move['RT'] = (1, 1)
+move['LT'] = (1, -1)
+move['RB'] = (-1, 1)
+move['LB'] = (-1, -1)
 
-def check():
-    count = 0
-    rows = [0] * 5
-    left_cross, right_cross = 0, 0
 
-    for i in range(5):
-        if sum(visited[i]) == 5:
-            count += 1
-        if visited[i][i] == 1:
-            left_cross += 1
-        if visited[i][4 - i] == 1:
-            right_cross += 1
-        
-        for j in range(5):
-            if visited[i][j] == 1:
-                rows[j] += 1 
+king_pos_y, king_pos_x = int(king[1]) - 1, ord(king[0]) - 65
+stone_pos_y, stone_pos_x = int(stone[1]) - 1, ord(stone[0]) - 65
+
+
+for _ in range(int(n)):
+    cmd = input().strip('\n')
     
-    if left_cross == 5:
-        count += 1
-    if right_cross == 5:
-        count += 1
-    for i in range(5):
-        if rows[i] == 5: count += 1
+    dy, dx = move[cmd]
     
-    if count >= 3:
-        return True
-    else:
-        return False
+    king_ny, king_nx = king_pos_y + dy, king_pos_x + dx
+
+    if king_ny < 0 or king_ny >= 8 or king_nx < 0 or king_nx >= 8:
+        continue
+    
+    if king_ny == stone_pos_y and king_nx == stone_pos_x:
+        stone_ny, stone_nx = stone_pos_y + dy, stone_pos_x + dx
+
+        if stone_ny < 0 or stone_ny >= 8 or stone_nx < 0 or stone_nx >= 8:
+            continue 
+        stone_pos_y, stone_pos_x = stone_ny, stone_nx
+
+    king_pos_y, king_pos_x = king_ny, king_nx 
 
 
-found_ans = False
-
-for nums in ans:
-    if found_ans: break
-    for num in nums:
-
-        for i in range(5):
-            for j in range(5):
-                if bingo[i][j] == num:
-                    visited[i][j] = 1
-        
-        if check(): 
-            found_ans = True
-            break
-
-        result += 1
-
-print(result)
-
+print(chr(65 + king_pos_x) + str(king_pos_y + 1))
+print(chr(65 + stone_pos_x) + str(stone_pos_y + 1))
