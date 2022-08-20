@@ -1,18 +1,38 @@
 import sys
 input = sys.stdin.readline
 
-n, m = map(int, input().split())
-data = list(map(int, input().split()))
+a, b = map(str, input().split())
 
-for i in range(1, n): data[i] += data[i - 1]
+B = int(b)
 
-for i in range(m):
-    start, end = map(int, input().split())
+data = list(map(int, a))
+sequence = []
+visited = [False] * len(data)
+
+result = -1
+
+def dfs(depth):
+    global result
     
-    start -= 1
-    end -= 1
+    if depth == len(data):
+        total = int(''.join(sequence))
 
-    if start == 0:
-        print(data[end])
-    else:
-        print(data[end] - data[start - 1])
+        if total < B:
+            result = max(result, total)
+        return
+
+    for i in range(len(data)):
+        if not visited[i]:
+            if depth == 0 and data[i] == 0:
+                continue
+
+            visited[i] = True
+            sequence.append(str(data[i]))
+
+            dfs(depth + 1)
+
+            visited[i] = False
+            sequence.pop()
+
+dfs(0)
+print(result)
