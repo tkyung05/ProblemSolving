@@ -1,12 +1,17 @@
+from collections import deque
 import sys
 input = sys.stdin.readline
 
-n, k = map(int, input().split())
-data = list(map(int, input().split()))
+n = int(input())
+data = [list(map(int, input().split())) for _ in range(n)]
+data.sort()
 
-for i in range(1, n): data[i] += data[i - 1]
-
-result = data[k - 1]
-for i in range(n - k): result = max(result, data[k + i] - data[i])
+result = 0
+ 
+for i in range(n):
+    if result < data[i][0]:
+        result = sum(data[i])
+    else:    
+        result += data[i][1]
 
 print(result)
