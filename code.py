@@ -2,31 +2,24 @@ import sys
 input = sys.stdin.readline
 
 n = int(input())
-k = int(input())
+card = list(map(int, input().split()))
 
-card = [int(input()) for _ in range(n)]
-
-combi = []
 result = {}
-visited = [False] * n
+max_v = 20 * int(1e5) + 1
 
-def dfs(depth):
-  if depth == k:
-    num = ''
-    for i in combi:
-      num += str(card[i])
-    result[num] = 1
+def dfs(idx, total):
+  if idx == n:
     return
+  
+  total += card[idx]
+  result[total] = 1
 
-  for i in range(n):
-    if not visited[i]:
-      visited[i] = True
-      combi.append(i)
-      
-      dfs(depth + 1)
-      
-      visited[i] = False
-      combi.pop()
+  dfs(idx + 1, total)
+  dfs(idx + 1, total - card[idx])
 
-dfs(0)
-print(len(result.values()))
+dfs(0, 0)
+
+for i in range(1, max_v):
+  if i not in result:
+    print(i)
+    break
