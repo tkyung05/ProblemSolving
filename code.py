@@ -1,25 +1,67 @@
+from collections import deque
 import sys
 input = sys.stdin.readline
 
-n = int(input())
-card = list(map(int, input().split()))
+N, M = map(int, input().split())
+graph = [list(map(int, input().split())) for _ in range(N)]
 
-result = {}
-max_v = 20 * int(1e5) + 1
+result = 0
+virus_pos = []
+dy = [1, -1, 0, 0]
+dx = [0, 0, -1, 1]
 
-def dfs(idx, total):
-  if idx == n:
+for i in range(N):
+  for j in range(M):
+    if graph[i][j] == 2:
+      virus_pos.append((i, j))
+
+def bfs():
+  global result
+
+  visited = [[0] * M for _ in range(N)]
+
+  q = deque([])
+  for y, x in virus_pos:
+    visited[y][x] = 2
+    q.append((y, x))
+
+  for i in range(N):
+    for j in range(M):
+      if graph[i][j] == 1:
+        visited[i][j] = 1
+  
+  while q:
+    y, x = q.popleft()
+    
+    for i in range(4):
+      ny, nx = y + dy[i], x + dx[i]
+      if ny < 0 or ny >= N or nx < 0 or nx >= M:
+        continue
+
+      if visited[ny][nx] == 0:
+        visited[ny][nx] = 2
+        q.append((ny, nx))
+
+  total = 0
+  for i in range(N):
+    for j in range(M):
+      if visited[i][j] == 0:
+        total += 1
+
+  result = max(result, total)
+
+
+def dfs(depth):
+  if depth == 3:
+    bfs()
     return
   
-  total += card[idx]
-  result[total] = 1
+  for i in range(N):
+    for j in range(M):
+      if graph[i][j] == 0:
+        graph[i][j] = 1
+        dfs(depth + 1)
+        graph[i][j] = 0
 
-  dfs(idx + 1, total)
-  dfs(idx + 1, total - card[idx])
-
-dfs(0, 0)
-
-for i in range(1, max_v):
-  if i not in result:
-    print(i)
-    break
+dfs(0)
+print(result)
