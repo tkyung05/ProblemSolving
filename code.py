@@ -1,39 +1,54 @@
 import heapq
 
-def solution(jobs):
-    answer = []
-    disk_count = len(jobs)
+def solution(operations):
+    answer = [0] * 2
     
-    heapq.heapify(jobs)
-  
-    total_time = 0
+    min_heap = []
+    max_heap = []
+    visited = [False] * 1000000
+    
+    for i in range(len(operations)):
+        cmd, num = operations[i].split()
+        
+        if cmd == 'I':
+            heapq.heappush(min_heap, (int(num), i))
+            heapq.heappush(max_heap, (-1 * int(num), i))
+            
+            visited[i] = True
+        
+        else:
+            if num == '-1':
+                while min_heap and not visited[min_heap[0][1]]:
+                    heapq.heappop(min_heap)
+                
+                if min_heap:
+                    number, idx = heapq.heappop(min_heap)
+                    visited[idx] = False
+            
+            if num == '1':
+                while max_heap and not visited[max_heap[0][1]]:
+                    heapq.heappop(max_heap)
+                
+                if max_heap:
+                    number, idx = heapq.heappop(max_heap)
+                    visited[idx] = False
+    
+    while min_heap and not visited[min_heap[0][1]]:
+        heapq.heappop(min_heap)
+    
+    while max_heap and not visited[max_heap[0][1]]:
+        heapq.heappop(max_heap)
+    
+    
+    if len(min_heap) == 0 or len(max_heap) == 0:
+        return answer
+    else:
+        answer[0] = heapq.heappop(max_heap)[0] * -1
+        answer[1] = heapq.heappop(min_heap)[0]
+        return answer
 
-    while jobs:
-      temp_disk = []
-      only_one = False
 
-      # 마지막으로 처리한 시간보다 작거나 같은 디스크를 넣어줌
-      while jobs and jobs[0][0] <= total_time:
-        ask_time, work_time = heapq.heappop(jobs)
-        heapq.heappush(temp_disk, (work_time, ask_time))
 
-      # 요청 시간이 total 보다 큰 경우
-      if not temp_disk:
-        ask_time, work_time = heapq.heappop(jobs)
-        heapq.heappush(temp_disk, (work_time, ask_time))
-        only_one = True
 
-      now_work_time, now_ask_time = heapq.heappop(temp_disk)
-      
-      if only_one:
-        answer.append(now_work_time)
-        total_time = now_ask_time + now_work_time
-      else:
-        answer.append((total_time - now_ask_time) + now_work_time)
-        total_time += now_work_time
 
-      while temp_disk:
-        work, ask = heapq.heappop(temp_disk)
-        heapq.heappush(jobs, [ask, work])
 
-    return sum(answer) // disk_count
