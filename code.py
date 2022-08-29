@@ -1,30 +1,18 @@
-def solution(brown, yellow):
+def solution(k, dungeons):
+    answer = []
+    visited = [False] * len(dungeons)
     
-    def check_bug(overall, ny):
-        if overall % ny != 0:
-            return True
-        return False
-    
-    answer = [0] * 2
-    y, x = 3, 0
-    overall_size = brown + yellow
-    
-    while True:
-        if check_bug(overall_size, y):
-            y += 1
-            continue
-        x = overall_size // y
-        yellow_y = y - 2
+    def dfs(depth, now_p):
+        answer.append(depth)
         
-        if check_bug(yellow, yellow_y):
-            y += 1
-            continue
-        yellow_x = yellow // yellow_y
+        if depth == len(dungeons):
+            return
+            
+        for i in range(len(dungeons)):
+            if not visited[i] and now_p >= dungeons[i][0]:
+                visited[i] = True
+                dfs(depth + 1, now_p - dungeons[i][1])
+                visited[i] = False
         
-        if x - yellow_x == 2:
-            answer[0], answer[1] = x, y 
-            break
-        else:
-            y += 1
-        
-    return answer
+    dfs(0, k)
+    return max(answer)
