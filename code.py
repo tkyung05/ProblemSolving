@@ -1,11 +1,30 @@
-def solution(citations):
-    answer = 0
-    citations.sort()
+def solution(brown, yellow):
     
-    for h in range(len(citations)):
-        for i in range(len(citations)):
-            if h + 1 <= citations[i] and len(citations) - i >= h + 1 and i <= h + 1:
-                answer = h + 1
-                break
+    def check_bug(overall, ny):
+        if overall % ny != 0:
+            return True
+        return False
     
+    answer = [0] * 2
+    y, x = 3, 0
+    overall_size = brown + yellow
+    
+    while True:
+        if check_bug(overall_size, y):
+            y += 1
+            continue
+        x = overall_size // y
+        yellow_y = y - 2
+        
+        if check_bug(yellow, yellow_y):
+            y += 1
+            continue
+        yellow_x = yellow // yellow_y
+        
+        if x - yellow_x == 2:
+            answer[0], answer[1] = x, y 
+            break
+        else:
+            y += 1
+        
     return answer
