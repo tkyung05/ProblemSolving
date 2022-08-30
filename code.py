@@ -1,50 +1,41 @@
-import math
-
-def solution(fees, records):
+def solution(numbers, hand):
     answer = []
-
-    total_cars = {}
-    total_times = {}
-    total_fees = []
     
-    for record in records:
-        time, num, state = record.split()
-        h, m = time.split(':')
-        
-        if state == 'IN':
-            in_time = int(h) * 60 + int(m)
-            total_cars[num] = in_time
+    left_nums = {'1': (0, 0), '4': (1, 0), '7': (2, 0)}
+    right_nums = {'3': (0, 2), '6': (1, 2), '9': (2, 2)}
+    other_nums = {'2' : (0, 1), '5' : (1, 1), '8' : (2, 1), '0' : (3, 1)}
+    
+    now_left_pos = (3, 0)
+    now_right_pos = (3, 2)
+    
+    for num in numbers:
+        if str(num) in left_nums:
+            now_left_pos = left_nums[str(num)]
+            answer.append('L')
+        elif str(num) in right_nums:
+            now_right_pos = right_nums[str(num)]
+            answer.append('R')
+        else:
+            dy, dx = other_nums[str(num)]
+            l_y, l_x = now_left_pos
+            r_y, r_x = now_right_pos
             
-        elif state == 'OUT':
-            in_time = total_cars[num]
-            out_time = int(h) * 60 + int(m)
-            total_time = out_time - in_time
+            left_gap = abs(dy - l_y) + abs(dx - l_x)
+            right_gap = abs(dy - r_y) + abs(dx - r_x)
             
-            if num not in total_times:
-                total_times[num] = total_time
-            else:
-                total_times[num] += total_time
-            total_cars[num] = -1
+            if left_gap < right_gap:
+                answer.append('L')
+                now_left_pos = (dy, dx)
+            elif left_gap > right_gap:
+                answer.append('R')
+                now_right_pos = (dy, dx)
+            elif left_gap == right_gap:
+                if hand == 'left':
+                    answer.append('L')
+                    now_left_pos = (dy, dx)
+                else:
+                    answer.append('R')
+                    now_right_pos = (dy, dx)
         
         
-    for k in total_cars:
-        if total_cars[k] != -1:
-            in_time = total_cars[k]
-            if k not in total_times:
-                total_times[k] = (1439 - in_time)
-            else:
-                total_times[k] += (1439 - in_time)
-        
-    
-    for k in total_times:
-        fee = fees[1]
-        if total_times[k] > fees[0]:
-            fee += math.ceil((total_times[k] - fees[0]) / fees[2]) * fees[3]
-        total_fees.append((int(k), fee))
-        
-    total_fees.sort()
-    for n, f in total_fees:
-        answer.append(f)
-    
-    return answer
-
+    return ''.join(answer)
