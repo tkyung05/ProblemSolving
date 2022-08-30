@@ -1,22 +1,50 @@
-def solution(board, moves):
-    answer = 0
-    basket = []
-    size = len(board)
+import math
+
+def solution(fees, records):
+    answer = []
+
+    total_cars = {}
+    total_times = {}
+    total_fees = []
     
-    for num in moves:
-        catch = 0
+    for record in records:
+        time, num, state = record.split()
+        h, m = time.split(':')
         
-        for i in range(size):
-            if board[i][num - 1] != 0:
-                catch = board[i][num - 1]
-                board[i][num - 1] = 0
-                break
-        
-        if catch != 0:
-            if basket and basket[-1] == catch:
-                basket.pop()
-                answer += 2
+        if state == 'IN':
+            in_time = int(h) * 60 + int(m)
+            total_cars[num] = in_time
+            
+        elif state == 'OUT':
+            in_time = total_cars[num]
+            out_time = int(h) * 60 + int(m)
+            total_time = out_time - in_time
+            
+            if num not in total_times:
+                total_times[num] = total_time
             else:
-                basket.append(catch)            
+                total_times[num] += total_time
+            total_cars[num] = -1
+        
+        
+    for k in total_cars:
+        if total_cars[k] != -1:
+            in_time = total_cars[k]
+            if k not in total_times:
+                total_times[k] = (1439 - in_time)
+            else:
+                total_times[k] += (1439 - in_time)
+        
+    
+    for k in total_times:
+        fee = fees[1]
+        if total_times[k] > fees[0]:
+            fee += math.ceil((total_times[k] - fees[0]) / fees[2]) * fees[3]
+        total_fees.append((int(k), fee))
+        
+    total_fees.sort()
+    for n, f in total_fees:
+        answer.append(f)
     
     return answer
+
