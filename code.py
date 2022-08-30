@@ -1,18 +1,22 @@
-def solution(k, dungeons):
-    answer = []
-    visited = [False] * len(dungeons)
+def solution(board, moves):
+    answer = 0
+    basket = []
+    size = len(board)
     
-    def dfs(depth, now_p):
-        answer.append(depth)
+    for num in moves:
+        catch = 0
         
-        if depth == len(dungeons):
-            return
-            
-        for i in range(len(dungeons)):
-            if not visited[i] and now_p >= dungeons[i][0]:
-                visited[i] = True
-                dfs(depth + 1, now_p - dungeons[i][1])
-                visited[i] = False
+        for i in range(size):
+            if board[i][num - 1] != 0:
+                catch = board[i][num - 1]
+                board[i][num - 1] = 0
+                break
         
-    dfs(0, k)
-    return max(answer)
+        if catch != 0:
+            if basket and basket[-1] == catch:
+                basket.pop()
+                answer += 2
+            else:
+                basket.append(catch)            
+    
+    return answer
