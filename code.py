@@ -1,22 +1,39 @@
-def solution(record):
-    answer = []
+def solution(m, n, data):
+    answer = 0
+    board = [list(map(str, i)) for i in data]
     
-    cmd_get = {'Enter': '님이 들어왔습니다.', 'Leave': '님이 나갔습니다.'}
-    uid_get = {}
-    logs = []
+    while True:
+        pop_count = 0
+        visited = [[0] * n for _ in range(m)]
+        
+        # 블록 터트리기
+        for i in range(m - 1):
+            for j in range(n - 1):
+                if board[i][j] == 'EMPTY': continue
+                if board[i][j] == board[i + 1][j] == board[i][j + 1] == board[i + 1][j + 1]:
+                    visited[i][j], visited[i + 1][j], visited[i + 1][j + 1], visited[i][j + 1] = 1, 1, 1, 1           
+        
+        # 터진 블록 개수 카운드
+        for i in range(m):
+            for j in range(n):
+                if visited[i][j] == 1:
+                    pop_count += 1
+                    board[i][j] = 'EMPTY'
     
-    for re in record:
-        cmd = list(map(str, (re.split())))
-
-        if cmd[0] == 'Enter':
-            uid_get[cmd[1]] = cmd[2] 
-            logs.append((cmd[0], cmd[1]))
-        elif cmd[0] == 'Leave':
-            logs.append((cmd[0], cmd[1]))
-        elif cmd[0] == 'Change':
-            uid_get[cmd[1]] = cmd[2]
-            
-    for cmd, uid in logs:
-        answer.append(uid_get[uid] + cmd_get[cmd])
-
+        # 종료 조건
+        if pop_count == 0:
+            break
+        
+        # 블록 떨어지는 기능
+        for i in range(n):
+            for j in range(m - 1, 0, -1):
+                if board[j][i] == 'EMPTY':
+                    for k in range(j - 1, -1, -1):
+                        if board[k][i] != 'EMPTY':
+                            board[j][i] = board[k][i]
+                            board[k][i] = 'EMPTY'
+                            break
+        
+        answer += pop_count 
+                    
     return answer
