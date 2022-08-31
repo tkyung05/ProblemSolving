@@ -1,36 +1,22 @@
-def solution(new_id):
-    answer = ''
-    not_possible = {'/': 1, '~': 1, '!': 1, '@': 1, '#': 1, '$': 1, '%': 1, '^': 1, '&': 1, '*': 1, '(': 1, ')': 1, '=': 1, '+': 1, '[': 1, ']': 1, '{': 1, '}': 1, ':': 1, '?': 1, ',': 1, '<': 1, '>': 1}
+def solution(record):
+    answer = []
     
-    one_step = new_id.lower()
-    two_step = ''
-    for i in one_step:
-        if i in not_possible: continue
-        else: two_step += i
+    cmd_get = {'Enter': '님이 들어왔습니다.', 'Leave': '님이 나갔습니다.'}
+    uid_get = {}
+    logs = []
     
-    three_step = ''
-    for i in two_step:
-        if len(list(three_step)) != 0 and three_step[-1] == '.' and i == '.': continue
-        else: three_step += i
-    
-    if len(list(three_step)) != 0:
-        if three_step[0] == '.':
-            three_step = three_step[1:]
-        if len(list(three_step)) != 0 and three_step[-1] == '.':
-            three_step = three_step[:len(list(three_step)) - 1]
+    for re in record:
+        cmd = list(map(str, (re.split())))
 
-    if len(list(three_step)) == 0:
-        three_step = 'a'
-    
-    if len(list(three_step)) >= 16:
-        three_step = three_step[:15] 
-        if three_step[-1] == '.':
-            three_step = three_step[:14]
+        if cmd[0] == 'Enter':
+            uid_get[cmd[1]] = cmd[2] 
+            logs.append((cmd[0], cmd[1]))
+        elif cmd[0] == 'Leave':
+            logs.append((cmd[0], cmd[1]))
+        elif cmd[0] == 'Change':
+            uid_get[cmd[1]] = cmd[2]
             
-    if len(list(three_step)) <= 2:
-        three_step += three_step[-1] * (3 - len(list(three_step)))
-        
-    return three_step
+    for cmd, uid in logs:
+        answer.append(uid_get[uid] + cmd_get[cmd])
 
-
-
+    return answer
