@@ -1,28 +1,30 @@
-def solution(cacheSize, cities):
-    answer = 0
-    cache = []
-    if cacheSize == 0:
-        return len(cities) * 5
+def solution(msg):
+    answer = []
+    dictionary = {}
     
-    for c in cities:
-        city = c.lower()
-        hit, idx = False, 0
+    for i in range(1, 27): dictionary[chr(64 + i)] = i
+    dic_idx, idx = 27, 0
+    end = False
+    
+    while True:
+        wc = msg[idx]
+        next_idx = 0
         
-        for i in range(len(cache)):
-            if cache[i] == city:
-                hit = True
-                idx = i
-                break
-        
-        if hit:
-            cache.append(cache.pop(idx))
-            answer += 1
-        else:
-            if len(cache) < cacheSize:
-                cache.append(city)
-            else:
-                cache.pop(0)
-                cache.append(city)
-            answer += 5
+        for i in range(idx + 1, len(msg)):
+            wc += msg[i]
+            next_idx += 1
+            if wc not in dictionary: break
+            elif i == len(msg) - 1: end = True
             
+        if end or idx == len(msg) - 1:
+            answer.append(dictionary[wc])
+            break
+            
+        w = wc[:len(wc) - 1]
+        answer.append(dictionary[w])
+        dictionary[wc] = dic_idx
+        
+        dic_idx += 1
+        idx += next_idx
+        
     return answer
