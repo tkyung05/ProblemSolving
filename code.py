@@ -1,30 +1,58 @@
-def solution(msg):
-    answer = []
-    dictionary = {}
+def solution(n, k, cmd):
+    answer = ['O'] * n
+    graph = {i : [i - 1, i + 1] for i in range(n)}
+    graph[0][0], graph[n - 1][1] = None, None
     
-    for i in range(1, 27): dictionary[chr(64 + i)] = i
-    dic_idx, idx = 27, 0
-    end = False
+    save_z = []
+    now_select = k
     
-    while True:
-        wc = msg[idx]
-        next_idx = 0
-        
-        for i in range(idx + 1, len(msg)):
-            wc += msg[i]
-            next_idx += 1
-            if wc not in dictionary: break
-            elif i == len(msg) - 1: end = True
+    for i in range(len(cmd)):
+        c = cmd[i].split()
+    
+        if c[0] == 'C':
+            answer[now_select] = 'X'
+            prev, next = graph[now_select]
+            save_z.append([now_select, prev, next])
             
-        if end or idx == len(msg) - 1:
-            answer.append(dictionary[wc])
-            break
+            if next == None:
+                now_select = prev
+            else:
+                now_select = next
             
-        w = wc[:len(wc) - 1]
-        answer.append(dictionary[w])
-        dictionary[wc] = dic_idx
+            if prev == None:
+                graph[next][0] = None
+            elif next == None:
+                graph[prev][1] = None
+            else:
+                graph[prev][1] = next
+                graph[next][0] = prev
         
-        dic_idx += 1
-        idx += next_idx
-        
-    return answer
+        elif c[0] == 'Z':
+            now_idx, prev, next = save_z.pop()
+            answer[now_idx] = 'O'
+            
+            if prev == None:
+                graph[next][0] = now_idx
+            elif next == None:
+                graph[prev][1] = now_idx
+            else:
+                graph[prev][1] = now_idx
+                graph[next][0] = now_idx
+
+        else:
+            x = int(c[1])           
+            key = 0 if c[0] == 'U' else 1
+                
+            for _ in range(x):
+                now_select = graph[now_select][key]
+            
+            
+    return ''.join(answer)
+
+
+
+
+
+
+
+
