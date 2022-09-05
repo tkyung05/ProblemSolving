@@ -1,58 +1,26 @@
-def solution(n, k, cmd):
-    answer = ['O'] * n
-    graph = {i : [i - 1, i + 1] for i in range(n)}
-    graph[0][0], graph[n - 1][1] = None, None
+def solution(N, stages):
+    answer = []
+    result = []
     
-    save_z = []
-    now_select = k
-    
-    for i in range(len(cmd)):
-        c = cmd[i].split()
-    
-        if c[0] == 'C':
-            answer[now_select] = 'X'
-            prev, next = graph[now_select]
-            save_z.append([now_select, prev, next])
-            
-            if next == None:
-                now_select = prev
-            else:
-                now_select = next
-            
-            if prev == None:
-                graph[next][0] = None
-            elif next == None:
-                graph[prev][1] = None
-            else:
-                graph[prev][1] = next
-                graph[next][0] = prev
+    for now_stage in range(1, N + 1):
+        fail_players = 0
+        all_players = 0
         
-        elif c[0] == 'Z':
-            now_idx, prev, next = save_z.pop()
-            answer[now_idx] = 'O'
-            
-            if prev == None:
-                graph[next][0] = now_idx
-            elif next == None:
-                graph[prev][1] = now_idx
-            else:
-                graph[prev][1] = now_idx
-                graph[next][0] = now_idx
+        for stage in stages:
+            if now_stage <= stage:
+                all_players += 1        
+            if now_stage == stage:  
+                fail_players += 1
 
-        else:
-            x = int(c[1])           
-            key = 0 if c[0] == 'U' else 1
-                
-            for _ in range(x):
-                now_select = graph[now_select][key]
-            
-            
-    return ''.join(answer)
+        if all_players == 0:
+            total = 0
+        else: 
+            total = fail_players / all_players
+        result.append((total, -1 * now_stage))
+    
+    result.sort(reverse=True)
+    
+    for value, idx in result:
+        answer.append(-1 * idx)
 
-
-
-
-
-
-
-
+    return answer
