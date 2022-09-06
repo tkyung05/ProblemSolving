@@ -1,22 +1,22 @@
-def solution(survey, choices):
+def solution(s):
     answer = ''
-    mbti_score = {'R' : 0, 'T' : 0, 'C' : 0, 'F' : 0, 'J' : 0, 'M' : 0, 'A' : 0, 'N' : 0}
-    mbti = [['R', 'T'], ['C', 'F'], ['J', 'M'], ['A', 'N']]
     
-    for i in range(len(choices)):
-        if choices[i] > 4:
-            mbti_score[survey[i][1]] += choices[i] - 4
-        elif choices[i] < 4:
-            mbti_score[survey[i][0]] += abs(choices[i] - 4) 
+    start_with = {'o' : ['ne'], 'z' : ['ero'], 't' : ['wo', 'hree'], 'f' : ['our', 'ive'],
+             's' : ['ix', 'even'], 'e' : ['ight'], 'n' : ['ine']}
     
-    for i in range(4):
-        temp = []
-        temp.append((mbti_score[mbti[i][0]], mbti[i][0]))
-        temp.append((mbti_score[mbti[i][1]], mbti[i][1]))
-        temp.sort(reverse=True)
-        if temp[0][0] == temp[1][0]:
-            answer += temp[1][1]
-        else: 
-            answer += temp[0][1]
+    found_number = {'zero' : '0', 'one' : '1', 'two' : '2', 'three' : '3', 'four' : '4', 'five' : '5', 'six' : '6', 'seven' : '7', 'eight' : '8', 'nine' : '9'}
+    
+    idx = 0
+    
+    while idx < len(s):
+        if s[idx] not in start_with:
+            answer += s[idx]
+            idx += 1
+        else:
+            for word in start_with[s[idx]]:
+                if word[0] == s[idx + 1]:
+                    answer += found_number[s[idx] + word]  
+                    idx += len(word) + 1
+                    break
             
-    return answer
+    return int(answer)
