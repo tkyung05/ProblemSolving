@@ -1,25 +1,21 @@
-def solution(n, k):
-    answer = 0
+def solution(n, words):
+    answer = [0] * 2
+    overlapCheck = {}
 
-    temp = ''
-    while n:
-        temp += str(n % k)
-        n //= k
+    if len(words[0]) == 1:
+        return [1, 1]
 
-    numbers = temp[::-1].split('0')
+    prev_word = words[0][-1]
+    overlapCheck[words[0]] = True
 
-    for number in numbers:
-        prime = True
-
-        if number == '' or number == '1':
-            continue
-
-        num = int(number)
-        for i in range(2, int(num ** 0.5) + 1):
-            if num % i == 0:
-                prime = False
-                break
-        if prime:
-            answer += 1
+    for i in range(1, len(words)):
+        if len(words[i]) > 1 and words[i][0] == prev_word and words[i] not in overlapCheck:
+            overlapCheck[words[i]] = True
+            prev_word = words[i][-1]
+        else:
+            answer[0] = (i % n) + 1
+            answer[1] = (i + 1) // n
+            answer[1] += 1 if (i + 1) % n != 0 else 0
+            break
 
     return answer
