@@ -1,32 +1,25 @@
-def solution(s):
-    answer = []
-    s = s[1:-1]
-    
-    transList = []
-    idx = 0
-    while idx < len(s):
-        if s[idx] == '{':
-            idx += 1
-            start = idx
-            while s[idx] != '}': idx += 1
-            end = idx    
-            
-            data = s[start:end].split(',')
-            transList.append((len(data), data))
-            idx += 2
-    transList.sort()
-    
-    answerHash = {}
-    for l, data in transList:
-        for element in data:
-            if element not in answerHash:
-                answerHash[element] = True
-                answer.append(int(element))
-    
+def solution(n, k):
+    answer = 0
+
+    temp = ''
+    while n:
+        temp += str(n % k)
+        n //= k
+
+    numbers = temp[::-1].split('0')
+
+    for number in numbers:
+        prime = True
+
+        if number == '' or number == '1':
+            continue
+
+        num = int(number)
+        for i in range(2, int(num ** 0.5) + 1):
+            if num % i == 0:
+                prime = False
+                break
+        if prime:
+            answer += 1
+
     return answer
-
-
-
-
-
-
