@@ -1,12 +1,10 @@
-def solution(s):
-    answer = [0] * 2
+def solution(n, a, b):
+    answer = 0
 
-    delZero, trans = 0, 0
-    while len(s) > 1:
-        countOne = sum(list(map(int, s)))
-        delZero += len(s) - countOne
-        s = format(countOne, 'b')
-        trans += 1
+    while a != b:
+        a = (a // 2) + (a % 2)
+        b = (b // 2) + (b % 2)
 
-    answer[0], answer[1] = trans, delZero
+        answer += 1
+
     return answer
