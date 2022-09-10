@@ -1,26 +1,35 @@
-def solution(s):
-    answer = 0
-    ran = len(s)
-    brackets = {')': '(', '}': '{', ']': '['}
+LIMIT = 100001
+notationNums = []
 
-    for _ in range(ran):
-        f, l = s[:1], s[1:]
-        s = l + f
 
-        stack = []
-        bug = False
+def transNotation(num, n):
+    global notationNums
+    result = []
 
-        for b in s:
-            if b not in brackets:
-                stack.append(b)
-            else:
-                if stack and stack[-1] == brackets[b]:
-                    stack.pop()
-                else:
-                    bug = True
-                    break
+    if num == 0:
+        result.append(0)
 
-        if not bug and len(stack) == 0:
-            answer += 1
+    while num > 0:
+        if num % n < 10:
+            result.append(num % n)
+        else:
+            result.append(chr(num % n - 10 + ord('A')))
+        num //= n
+
+    notationNums += result[::-1]
+
+
+def solution(n, t, m, p):
+    answer = ''
+    p -= 1
+
+    for num in range(LIMIT):
+        transNotation(num, n)
+        if len(notationNums) >= m * t:
+            break
+
+    for _ in range(t):
+        answer += str(notationNums[p])
+        p += m
 
     return answer
