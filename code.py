@@ -1,11 +1,26 @@
-def solution(n):
-    ans = 0
+def solution(s):
+    answer = 0
+    ran = len(s)
+    brackets = {')': '(', '}': '{', ']': '['}
 
-    while n > 0:
-        if n % 2 == 1:
-            n -= 1
-            ans += 1
-        else:
-            n //= 2
+    for _ in range(ran):
+        f, l = s[:1], s[1:]
+        s = l + f
 
-    return ans
+        stack = []
+        bug = False
+
+        for b in s:
+            if b not in brackets:
+                stack.append(b)
+            else:
+                if stack and stack[-1] == brackets[b]:
+                    stack.pop()
+                else:
+                    bug = True
+                    break
+
+        if not bug and len(stack) == 0:
+            answer += 1
+
+    return answer
