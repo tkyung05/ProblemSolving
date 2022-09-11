@@ -1,35 +1,19 @@
-LIMIT = 100001
-notationNums = []
+def solution(skill, skill_trees):
+    answer = 0
+    my_skill = {s: 1 for s in skill}
 
+    for skt in skill_trees:
+        cur = 0
+        impossible_skill = False
 
-def transNotation(num, n):
-    global notationNums
-    result = []
+        for s in skt:
+            if s in my_skill:
+                if skill[cur] == s:
+                    cur += 1
+                else:
+                    impossible_skill = True
+                    break
 
-    if num == 0:
-        result.append(0)
-
-    while num > 0:
-        if num % n < 10:
-            result.append(num % n)
-        else:
-            result.append(chr(num % n - 10 + ord('A')))
-        num //= n
-
-    notationNums += result[::-1]
-
-
-def solution(n, t, m, p):
-    answer = ''
-    p -= 1
-
-    for num in range(LIMIT):
-        transNotation(num, n)
-        if len(notationNums) >= m * t:
-            break
-
-    for _ in range(t):
-        answer += str(notationNums[p])
-        p += m
+        answer += 0 if impossible_skill else 1
 
     return answer
