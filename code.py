@@ -1,24 +1,29 @@
-def solution(dirs):
-    answer = 0
+def solution(files):
+    answer = []
+    num_check = {str(i): 1 for i in range(10)}
+    order_files = []
 
-    move = {'U': [-1, 0], 'D': [1, 0], 'R': [0, 1], 'L': [0, -1]}
-    player_y, player_x = 5, 5
-    overlap_way = {}
+    for idx in range(len(files)):
+        h, n = '', ''
 
-    for cmd in dirs:
-        dy, dx = move[cmd]
-        ny, nx = player_y + dy, player_x + dx
+        num_start = 0
+        for s in range(len(files[idx])):
+            if files[idx][s] not in num_check:
+                h += files[idx][s]
+            else:
+                num_start = s
+                break
 
-        if ny < 0 or ny > 10 or nx < 0 or nx > 10:
-            continue
+        for s in range(num_start, len(files[idx])):
+            if files[idx][s] in num_check and (s - num_start) < 5:
+                n += files[idx][s]
+            else:
+                break
 
-        key = str(player_y) + str(player_x) + str(ny) + str(nx)
+        order_files.append((h.lower(), int(n), idx))
 
-        if key not in overlap_way:
-            overlap_way[key] = 1
-            overlap_way[str(ny) + str(nx) + str(player_y) + str(player_x)] = 1
-            answer += 1
-
-        player_y, player_x = ny, nx
+    order_files.sort()
+    for h, n, idx in order_files:
+        answer.append(files[idx])
 
     return answer
