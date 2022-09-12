@@ -1,29 +1,22 @@
-def solution(files):
-    answer = []
-    num_check = {str(i): 1 for i in range(10)}
-    order_files = []
+answer = [0] * 2
 
-    for idx in range(len(files)):
-        h, n = '', ''
 
-        num_start = 0
-        for s in range(len(files[idx])):
-            if files[idx][s] not in num_check:
-                h += files[idx][s]
-            else:
-                num_start = s
-                break
+def dfs(y, x, size, arr):
+    global answer
+    num = arr[y][x]
 
-        for s in range(num_start, len(files[idx])):
-            if files[idx][s] in num_check and (s - num_start) < 5:
-                n += files[idx][s]
-            else:
-                break
+    for i in range(y, y + size):
+        for j in range(x, x + size):
+            if arr[i][j] != num:
+                dfs(y, x, size // 2, arr)
+                dfs(y + size // 2, x, size // 2, arr)
+                dfs(y, x + size // 2, size // 2, arr)
+                dfs(y + size // 2, x + size // 2, size // 2, arr)
+                return
 
-        order_files.append((h.lower(), int(n), idx))
+    answer[num] += 1
 
-    order_files.sort()
-    for h, n, idx in order_files:
-        answer.append(files[idx])
 
+def solution(arr):
+    dfs(0, 0, len(arr), arr)
     return answer
