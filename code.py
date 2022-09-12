@@ -1,22 +1,22 @@
-answer = [0] * 2
+def solution(numbers):
+    answer = []
 
+    for num in numbers:
+        bin_num = format(num, 'b')
+        if len(bin_num) == sum(list(map(int, bin_num))):
+            bin_num = '0b10' + bin_num[1:]
+        else:
+            bin_list = list(bin_num)
+            for i in range(len(bin_list) - 1, -1, -1):
+                if bin_list[i] == '0':
+                    bin_list[i] = '1'
+                    for j in range(i + 1, len(bin_list)):
+                        if bin_list[j] == '1':
+                            bin_list[j] = '0'
+                            break
+                    break
+            bin_num = '0b' + ''.join(bin_list)
 
-def dfs(y, x, size, arr):
-    global answer
-    num = arr[y][x]
+        answer.append(int(bin_num, 2))
 
-    for i in range(y, y + size):
-        for j in range(x, x + size):
-            if arr[i][j] != num:
-                dfs(y, x, size // 2, arr)
-                dfs(y + size // 2, x, size // 2, arr)
-                dfs(y, x + size // 2, size // 2, arr)
-                dfs(y + size // 2, x + size // 2, size // 2, arr)
-                return
-
-    answer[num] += 1
-
-
-def solution(arr):
-    dfs(0, 0, len(arr), arr)
     return answer
