@@ -1,11 +1,12 @@
-def solution(land):
+LIMIT = 2001
+DIV_NUM = 1234567
 
-    for i in range(1, len(land)):
-        for j in range(4):
-            prev_max = -1
-            for k in range(4):
-                if k != j:
-                    prev_max = max(prev_max, land[i - 1][k])
-            land[i][j] += prev_max
 
-    return max(land[-1])
+def solution(n):
+    dp = [0] * LIMIT
+    dp[1], dp[2] = 1, 2
+
+    for i in range(3, LIMIT):
+        dp[i] = (dp[i - 1] + dp[i - 2]) % DIV_NUM
+
+    return dp[n]
