@@ -1,16 +1,11 @@
-from collections import deque
+def solution(land):
 
+    for i in range(1, len(land)):
+        for j in range(4):
+            prev_max = -1
+            for k in range(4):
+                if k != j:
+                    prev_max = max(prev_max, land[i - 1][k])
+            land[i][j] += prev_max
 
-def solution(people, limit):
-    answer = 0
-    people_weight = deque(sorted(people))
-
-    while len(people_weight) > 1:
-        if people_weight[0] + people_weight[-1] <= limit:
-            people_weight.popleft()
-            people_weight.pop()
-        else:
-            people_weight.pop()
-        answer += 1
-
-    return answer + len(people_weight)
+    return max(land[-1])
