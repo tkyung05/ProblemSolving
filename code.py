@@ -1,12 +1,6 @@
-LIMIT = 2001
-DIV_NUM = 1234567
+def solution(x):
+    return True if x % sum(list(map(int, list(map(str, x))))) == 0 else False
 
 
-def solution(n):
-    dp = [0] * LIMIT
-    dp[1], dp[2] = 1, 2
-
-    for i in range(3, LIMIT):
-        dp[i] = (dp[i - 1] + dp[i - 2]) % DIV_NUM
-
-    return dp[n]
+print(list(map(int, list(map(str, str(100))))))
+print(solution(10))
