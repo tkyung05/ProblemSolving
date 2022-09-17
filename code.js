@@ -1,6 +1,11 @@
-function solution(s) {
-  const str = s.split(' ');
-  const answer = str.map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase());
+function solution(A,B){
+  let answer = 0;
   
-  return answer.join(' ');
+  A.sort((a, b) => a - b);
+  B.sort((a, b) => b - a);
+  
+  for (let i = 0; i < A.length; i++) {
+      answer += A[i] * B[i]
+  }
+  return answer;
 }
