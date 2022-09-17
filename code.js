@@ -1,11 +1,26 @@
-function solution(A,B){
-  let answer = 0;
-  
-  A.sort((a, b) => a - b);
-  B.sort((a, b) => b - a);
-  
-  for (let i = 0; i < A.length; i++) {
-      answer += A[i] * B[i]
-  }
-  return answer;
+const LIMIT = 10001;
+
+function solution(n) {
+    let answer = 0;
+    
+    for (let i = 1; i <= LIMIT; i++) {
+        let sumNum = i;
+        
+        if (sumNum > n) {
+            break;
+        }
+        
+        for (let j = i + 1; j <= LIMIT; j++) {
+            if (sumNum > n) {
+                break;
+            } 
+            else if (sumNum == n) {
+                answer++;
+            }
+            
+            sumNum += j
+        }
+    }
+    
+    return answer;
 }
