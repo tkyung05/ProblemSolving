@@ -1,26 +1,10 @@
-const LIMIT = 10001;
+function solution(n, works) {
+  while (n != 0 && works.reduce((a, b) => a + b, 0) > 0) {
+    works[works.indexOf(Math.max(...works))] -= 1;
+    n--;
+  }
 
-function solution(n) {
-    let answer = 0;
-    
-    for (let i = 1; i <= LIMIT; i++) {
-        let sumNum = i;
-        
-        if (sumNum > n) {
-            break;
-        }
-        
-        for (let j = i + 1; j <= LIMIT; j++) {
-            if (sumNum > n) {
-                break;
-            } 
-            else if (sumNum == n) {
-                answer++;
-            }
-            
-            sumNum += j
-        }
-    }
-    
-    return answer;
+  const answer = works.map((x) => x ** 2).reduce((a, b) => a + b, 0);
+
+  return answer;
 }
