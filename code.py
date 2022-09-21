@@ -1,6 +1,14 @@
-def solution(x):
-    return True if x % sum(list(map(int, list(map(str, x))))) == 0 else False
+import heapq
 
 
-print(list(map(int, list(map(str, str(100))))))
-print(solution(10))
+def solution(n, works):
+    data = []
+    for work in works:
+        heapq.heappush(data, -1 * work)
+
+    while data[0] != 0 and n != 0:
+        heapq.heappush(data, heapq.heappop(data) + 1)
+        n -= 1
+
+    answer = sum([num * num for num in data])
+    return answer
