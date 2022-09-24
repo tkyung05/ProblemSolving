@@ -1,14 +1,13 @@
-import heapq
+LIMIT = 1000064
 
 
-def solution(n, works):
-    data = []
-    for work in works:
-        heapq.heappush(data, -1 * work)
+def solution(n):
+    answer = 0
+    compareNum = format(n, 'b').count('1')
 
-    while data[0] != 0 and n != 0:
-        heapq.heappush(data, heapq.heappop(data) + 1)
-        n -= 1
+    for num in range(n + 1, LIMIT + 1):
+        if compareNum == format(num, 'b').count('1'):
+            answer = num
+            break
 
-    answer = sum([num * num for num in data])
     return answer
